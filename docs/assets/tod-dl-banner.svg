@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420"
+     viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">TOD-DL — acquisition systems engineering</title>
+  <desc id="desc">A technical schematic connects selected input, durable
+    state, and verified custody. Resumable transfer, exclusive finalization,
+    and signed history form the acquisition pipeline.</desc>
+  <defs>
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#203047"
+            stroke-width="0.5"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="420" rx="16" fill="#101b2b"/>
+  <rect width="1200" height="420" rx="16" fill="url(#grid)"/>
+  <path d="M48 48h42 M48 48v24 M1152 372h-42 M1152 372v-24"
+        fill="none" stroke="#6adbc6" stroke-width="2"/>
+  <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace">
+    <text x="72" y="72" fill="#6adbc6" font-size="14" letter-spacing="2">
+      ACQUISITION / RECOVERY / VERIFICATION
+    </text>
+    <text x="70" y="165" fill="#f0f5fc" font-size="76" font-weight="700"
+          letter-spacing="-3">TOD-DL</text>
+  </g>
+  <g font-family="system-ui, -apple-system, sans-serif">
+    <text x="72" y="207" fill="#d6e1ef" font-size="23">
+      Resumable acquisition. Verifiable custody.
+    </text>
+    <text x="72" y="242" fill="#a9bbd0" font-size="17">
+      Durable state · Exclusive finalization · Signed history
+    </text>
+  </g>
+  <g transform="translate(780 74)" fill="none" stroke-width="2">
+    <path d="M0 18h66l25 25h179" stroke="#647e9e"/>
+    <path d="M0 142h66l25-25h179" stroke="#647e9e"/>
+    <path d="M0 80h270" stroke="#6adbc6"/>
+    <rect x="108" y="51" width="66" height="58" rx="9"
+          fill="#152b39" stroke="#6adbc6"/>
+    <path d="M124 80l11 11 22-24" stroke="#6adbc6"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="0" cy="18" r="5" fill="#101b2b" stroke="#a9bbd0"/>
+    <circle cx="0" cy="80" r="5" fill="#101b2b" stroke="#6adbc6"/>
+    <circle cx="0" cy="142" r="5" fill="#101b2b" stroke="#a9bbd0"/>
+    <circle cx="270" cy="43" r="5" fill="#101b2b" stroke="#a9bbd0"/>
+    <circle cx="270" cy="80" r="5" fill="#101b2b" stroke="#6adbc6"/>
+    <circle cx="270" cy="117" r="5" fill="#101b2b" stroke="#a9bbd0"/>
+  </g>
+  <path d="M72 281h1056" stroke="#30435c"/>
+  <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace">
+    <g fill="#6adbc6" font-size="12" letter-spacing="1.5">
+      <text x="72" y="310">01 / DEFINE</text>
+      <text x="440" y="310">02 / PRESERVE</text>
+      <text x="808" y="310">03 / VERIFY</text>
+    </g>
+    <g fill="#f0f5fc" font-size="21">
+      <text x="72" y="342">Selected input</text>
+      <text x="440" y="342">Durable state</text>
+      <text x="808" y="342">Signed custody</text>
+    </g>
+    <path d="M341 329h42m-7-6 7 6-7 6 M709 329h42m-7-6 7 6-7 6"
+          fill="none" stroke="#647e9e" stroke-width="1.5"/>
+  </g>
+</svg>
