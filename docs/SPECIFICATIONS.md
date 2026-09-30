@@ -179,5 +179,5 @@ that pipeline exists. Source specs and their history remain the authority.
 Use [architecture](ARCHITECTURE.md) to find an implementation owner.
 Use [open work](../specs/OPEN-WORK.md) to identify the next unfinished contract.
 
-[banner]: assets/tod-dl-banner.svg
+[banner]: assets/tod-dl-banner.png
 [ref-1]: ../specs/SPEC-acquisition-evaluation-infrastructure.md
