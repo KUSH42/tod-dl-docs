@@ -164,4 +164,3 @@ For use permissions, read the [license](../LICENSE).
 [motion]: assets/acquisition-motion.gif
 [motion-still]: assets/acquisition-motion.png
 [motion-page]: assets/acquisition-motion.html
-

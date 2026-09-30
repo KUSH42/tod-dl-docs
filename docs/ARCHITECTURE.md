@@ -2,7 +2,7 @@
 
 [Documentation](README.md) / Architecture
 
-[banner]: docs/assets/tod-dl-banner.svg
+![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
 
 TOD-DL separates acquisition authority, operator interaction, and independent
 verification. SQLite owns recovery state. Signed artifacts provide the

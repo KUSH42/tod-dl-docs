@@ -2,7 +2,7 @@
 
 [Documentation](README.md) / Develop
 
-[banner]: docs/assets/tod-dl-banner.svg
+![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
 
 Start with the behavior contract and its owning component. The
 [architecture guide](ARCHITECTURE.md) maps responsibilities; the
@@ -115,7 +115,7 @@ when preparing HTML or PDF editions.
 Choose a behavior in [open work](../specs/OPEN-WORK.md), then read its spec,
 source owner, and tests before proposing an implementation.
 
-[banner]: docs/assets/tod-dl-banner.png
+[banner]: assets/tod-dl-banner.png
 [ref-1]: ../src/downloader/core.py
 [ref-2]: ../tests/test_tod_dl.py
 [ref-3]: ../src/downloader/storage.py
