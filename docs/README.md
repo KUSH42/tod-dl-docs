@@ -2,6 +2,8 @@
 
 [Repository](../README.md) / Documentation
 
+![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
+
 TOD-DL combines resumable acquisition, durable recovery, and signed custody
 records. These guides explain how to use the software and how to evaluate
 its engineering.
@@ -54,3 +56,4 @@ Start with the [project brief](PORTFOLIO-OVERVIEW.md), or open the
 [ref-4]: AUDIT-RAIL.md
 [ref-5]: CHAIN-OF-CUSTODY.md
 [ref-6]: SPECIFICATIONS.md
+[banner]: docs/assets/tod-dl-banner.svg
