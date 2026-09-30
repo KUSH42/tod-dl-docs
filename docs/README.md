@@ -50,10 +50,10 @@ remaining gaps; the linked spec defines the requirement.
 Start with the [project brief](PORTFOLIO-OVERVIEW.md), or open the
 [operator guide](OPERATOR-GUIDE.md) when you have an authorized case to run.
 
+[banner]: assets/tod-dl-banner.png
 [ref-1]: PORTFOLIO-OVERVIEW.md
 [ref-2]: PORTFOLIO-OVERVIEW.md#engineering-decisions
 [ref-3]: OPERATOR-GUIDE.md
 [ref-4]: AUDIT-RAIL.md
 [ref-5]: CHAIN-OF-CUSTODY.md
 [ref-6]: SPECIFICATIONS.md
-[banner]: assets/tod-dl-banner.png

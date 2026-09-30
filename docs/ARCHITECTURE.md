@@ -2,6 +2,8 @@
 
 [Documentation](README.md) / Architecture
 
+[banner]: docs/assets/tod-dl-banner.svg
+
 TOD-DL separates acquisition authority, operator interaction, and independent
 verification. SQLite owns recovery state. Signed artifacts provide the
 exportable history. The console observes published state and requests
@@ -103,6 +105,7 @@ exclusion have distinct effects described in the [operator guide][ref-15].
 Use the [development guide](DEVELOPMENT.md) to select focused tests.
 Use the [specification guide](SPECIFICATIONS.md) to trace an exact contract.
 
+[banner]: docs/assets/tod-dl-banner.png
 [reliable]: ../specs/SPEC-reliable-acquisition.md
 [recovery]: ../specs/SPEC-acquisition-fault-recovery.md
 [console]: ../specs/SPEC-console-ui.md
