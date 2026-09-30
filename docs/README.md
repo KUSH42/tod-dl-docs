@@ -56,4 +56,4 @@ Start with the [project brief](PORTFOLIO-OVERVIEW.md), or open the
 [ref-4]: AUDIT-RAIL.md
 [ref-5]: CHAIN-OF-CUSTODY.md
 [ref-6]: SPECIFICATIONS.md
-[banner]: docs/assets/tod-dl-banner.svg
+[banner]: docs/assets/tod-dl-banner.png
