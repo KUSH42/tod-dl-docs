@@ -2,22 +2,24 @@
 
 [Documentation](README.md) / Operate
 
-![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
-
 Use this guide to prepare, run, resume, verify, and export a bounded
 acquisition. Commands run from the repository root and use placeholder case
 paths. Use only material you are authorized to acquire and retain.
 
 TOD-DL remains a portfolio project with open validation work. Start with
 queue validation. Review the [current limits][open-work] before source
-contact. Public descriptor acquisition remains unavailable.
+contact. Public descriptor acquisition remains unavailable. URL queues use
+native transfer; the complete native acceptance matrix and operator pilot
+remain unverified. The [cutover contract][cutover] owns current resume and
+compatibility rules.
 
 ## Requirements
 
-You need Python 3, `aria2c`, `torsocks`, and a local Tor service. The Tor
-SocksPort must use `IsolateSOCKSAuth`; the controller checks it through the
-ControlPort. The downloader reads the Tor control
-cookie from `/run/tor/control.authcookie` by default.
+You need Python 3 and the pinned downloader dependencies. Tor routes also
+need `torsocks` and a local Tor service. The Tor SocksPort must use
+`IsolateSOCKSAuth`; the controller checks it through the ControlPort.
+The native engine does not require `aria2c`. The Tor control cookie default
+is owned by `--tor-control-cookie` in [`tod_dl.py`](../src/tod_dl.py).
 
 Create the downloader environment with these commands:
 
@@ -54,6 +56,7 @@ controller retains the declared artifacts and measured session context. It
 does not retain the declaration file itself.
 
 [context]: ../specs/SPEC-acquisition-context.md
+[cutover]: ../specs/SPEC-native-engine-cutover.md
 
 ## Prepare a queue
 
@@ -61,7 +64,8 @@ Each queue file contains one URL per line. Blank lines, comment lines,
 duplicate URLs, unsafe paths, URLs with credentials, and URLs with query
 values are ignored or rejected.
 
-A URL has the form `https://HOST/COLLECTION/PATH`. The `/data/` segment is
+A URL has the form `http://HOST/COLLECTION/PATH` or
+`https://HOST/COLLECTION/PATH`. The `/data/` segment is
 optional. The final path is `COLLECTION/PATH`, so a URL with `/data/` keeps
 `data` in the final path. A URL with only a collection, or with `ALL_FILES` as
 the file, is rejected. A URL is also rejected if a decoded segment makes the
@@ -103,7 +107,7 @@ Store queue files outside this source repository when they contain case data.
 ## Run an acquisition
 
 Start with a dry run. The dry run reads queues and reports the selected final
-paths. It does not start Tor, `aria2c`, or a source request.
+paths. It does not start a native transfer or contact a source.
 
 To validate a format 2 `requests.jsonl` file and its source policy, add
 `--source-policy /case/source-policy.json` and `--artifact-root /case` to a
@@ -147,36 +151,48 @@ removes that link when it promotes the file. The controller hashes one
 staged file at a time; a lagging hash holds its worker slot and pauses new
 admission until the hash finishes.
 
-The controller reads aria2 progress counters through an authenticated
-loopback RPC by default. The RPC is read-only. Add `--no-aria2-rpc` to turn it
-off.
+Native telemetry reads counters from the controller staging sink. The
+controller does not start an aria2 process or RPC server. `--engine native`
+selects the default engine explicitly. Retired aria2 options, including
+`--engine aria2`, `--aria2c`, `--aria2-rpc`, `--no-aria2-rpc`, and `--rpc-eval`,
+fail with exit status 2.
 
 The controller verifies the Tor isolation preflight only when at least one
 selected item resolves to the `tor` route; an all-`direct` or all-`proxy`
-selection starts without contacting a Tor control port at all. If a queue's
-selected items resolve to more than one route kind (for example, an `.onion`
-item mixed with a clearnet `route=direct` item), the controller refuses to
-start until the operator passes `--allow-mixed-routes`, so a mixed selection
+selection starts without contacting a Tor control port. Native URL queues
+support HTTP and HTTPS. A `proxy:NAME` route needs an HTTP proxy endpoint in
+`--proxy-config FILE`; unsupported proxy configurations enter review. If a
+queue's selected items resolve to more than one route kind (for example, an
+`.onion` item mixed with a clearnet `route=direct` item), the controller refuses
+to start until the operator passes `--allow-mixed-routes`, so a mixed selection
 is never a silent surprise.
 
 ## Recover from low storage
 
 The controller stops admission when free space at the destination and state
-filesystem falls below the reserve (10 GiB by default). No queued transfer
-starts until space is available again. An admitted transfer that hits
-`ENOSPC` mid-transfer resets to `queued` without consuming a retry attempt.
+filesystem falls below the reserve. The reserve default is owned by
+`--reserve-bytes` in [`tod_dl.py`](../src/tod_dl.py). The controller pauses
+admission and keeps control available. Local storage failures consume no
+network retry budget.
 
-To recover, free space on the destination filesystem, then resume the run
-with the same run ID as shown above. The controller re-checks free space
-before it admits the next transfer; no restart-specific flag is needed.
+Free space without deleting retained evidence. Then confirm
+`resume_admission` in the console, or restart with the same run inputs.
+Recovery preserves uncertain suffix bytes and restores authenticated prefixes
+before admission resumes. If repair fails, admission remains paused.
+
+A signing failure also pauses admission and stops native writers. Repair the
+signing problem before confirming `resume_admission`. The controller must
+stop all writers and finish authenticated-prefix recovery before transfer
+restarts. See [live signing repair][cutover].
 
 ## Review a candidate
 
 An item enters `review_required` when TOD-DL cannot safely promote it
 automatically: a checksum mismatch, a name that exceeds the filesystem limit
-(`ENAMETOOLONG`), an incomplete body after a single retry, or (for a resumed
-transfer with a recorded ETag or Last-Modified baseline) a changed or
-unconfirmed remote representation. Use `--status` to list `review_required`
+(`ENAMETOOLONG`), an unsafe path, or a rejected continuation response.
+A short body can retry from a protected authenticated prefix. Changed or
+unprotected remote representations enter review; Last-Modified alone does
+not authorize native continuation. Use `--status` to list `review_required`
 items and read each item's `review_code` and `last_error`.
 
 Three row-scoped actions apply to a `review_required` item. Each is durable and
@@ -222,15 +238,28 @@ python3 src/tod_dl.py \
 ```
 
 Always pass `--run-id` to resume. Without it, the controller names a new run,
-and a version 2 state directory refuses a second run. A run that started
-before version 2 became the default keeps provenance version 1; resume it
-with its original state directory and run ID.
+and a version 2 state directory refuses a second run.
 
-A stop that you request (SIGTERM, SIGINT, a control-UI stop, or `--time-limit`)
-keeps the partial file and schedules no retry delay. The resumed run continues
-the item at once, and the source answers the resume with an HTTP 206 range
-response. A source failure still waits 1, 2, 4, then more minutes. The
-`--retry-now` flag ends that wait early.
+Native continuation requires checkpoint-authenticated range receipts, a
+successful prefix reread, and a strong ETag or trusted expected checksum.
+Weak or missing ETags alone cannot protect a continuation. Recovery preserves
+unsigned suffix bytes before installing the authenticated prefix.
+
+The controller requests the next range only after those checks pass. It
+checks the response head before appending bytes. Ignored ranges, changed
+protection, invalid ranges, and other rejected heads preserve the prefix and
+enter review. A source response does not guarantee resumability.
+
+A network retry keeps the staging generation. A confirmed replacement from
+review starts a new generation and cannot use the old receipt coverage.
+`--retry-now` ends an eligible network retry wait; it does not bypass review
+or repair checks. Retry timing is owned by
+[`downloader/constants.py`](../src/downloader/constants.py).
+
+The active build refuses archived aria2 runs and incompatible version 2 schema
+pins before runtime writes or source contact. Resume or verify those runs
+with their matching retained build. Keep archived records and partials
+unchanged; do not edit an engine field or schema pin to force compatibility.
 
 Use `--status` to read persisted state without starting transfers.
 
@@ -259,7 +288,7 @@ python3 src/tod_dl.py \
 `--control` requires an interactive terminal on standard input, output, and
 error. If the console exits, the run continues headless and prints the
 `monitor.py --control` command line to reattach. `--control` is incompatible
-with `--status`, `--retry-now`, `--dry-run`, and `--rpc-eval`.
+with `--status`, `--retry-now`, and `--dry-run`.
 
 To attach a console to an already-running or already-finished run instead,
 run the monitor directly. The monitor reads a published telemetry snapshot.
@@ -279,7 +308,7 @@ controller runs it.
   configured rate limit, which defaults to 60 seconds.
 - Press `p` to pause admission. Active transfers keep running; the
   controller admits no new transfer until you resume.
-- Press `u` to resume admission for the current run.
+- Press `u` to resume admission after any required storage or signing repair.
 - Press `d` to drain and stop the run. Admission stops now. Active
   transfers finish to a durable state, then the run exits. You cannot undo
   this action.
@@ -313,8 +342,8 @@ python3 src/provenance/verify_provenance.py \
 
 ### Version 2 provenance
 
-New runs write provenance version 2. A resumed run keeps the version it
-started with. These rules apply to a version 2 run:
+New native runs write provenance version 2. The active build resumes only
+compatible native runs. These rules apply to a version 2 run:
 
 - Give each new version 2 run its own `--state` directory. The controller
   refuses a state directory that holds another run. It also refuses to run
@@ -344,8 +373,9 @@ started with. These rules apply to a version 2 run:
 - The [installed schema registry][schemas] owns revision digests. Keep the
   schema captured with the run; do not substitute a newer schema file.
   Final-file records include SHA-256 and SHA-512 content digests. The
-  verifier checks each declared final-file digest. Archived-reader policy
-  remains an open issue in [open work][open-work].
+  verifier checks each declared final-file digest. Non-active version 2
+  schemas require their matching retained verifier build; see the
+  [cutover contract][cutover].
 - Every session needs `--context-declaration`. See [case preparation][case].
 - To timestamp each session's final signed run-index revision, give
   `--timestamp-policy FILE` below `--artifact-root`, plus
@@ -354,9 +384,9 @@ started with. These rules apply to a version 2 run:
   Give the same policy file on resume. An absent or `off` policy sends no
   request. The controller prints each submission status. A failed or
   pending submission does not provide external time assurance.
-- A version 2 run moves `https` items and `proxy:NAME` items to review
-  without a request, pending descriptor-controller integration and the
-  complete local transport matrix.
+- Native URL queues support HTTP, HTTPS, Tor, direct routes, and configured
+  HTTP proxies. Descriptor acquisition remains blocked independently of URL
+  queue support. Native acceptance and the operator pilot remain unverified.
 - Each run has its own state directory, so a `generation=` change from a
   later run cannot start an early recheck of an `unavailable` item.
 - When every selected item has a terminal outcome, the controller closes
@@ -641,7 +671,6 @@ Response values outside the safe list are redacted. The
 Follow the [custody walkthrough](CHAIN-OF-CUSTODY.md) when reviewing a run.
 Use the [audit guide](AUDIT-RAIL.md) to interpret verification results.
 
-[banner]: assets/tod-dl-banner.png
 [schemas]: ../src/provenance/schemas/registry.json
 [open-work]: ../specs/OPEN-WORK.md
 [case]: #prepare-the-case-and-context

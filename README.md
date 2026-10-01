@@ -3,10 +3,13 @@
 [Repository](../README.md) / Documentation
 
 ![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
+[banner]: assets/tod-dl-banner.svg
 
 TOD-DL combines resumable acquisition, durable recovery, and signed custody
 records. These guides explain how to use the software and how to evaluate
-its engineering.
+its engineering. URL queues use the native engine. Protected resume requires
+an authenticated, reread prefix and strong ETag or trusted-checksum protection.
+The complete native acceptance matrix and operator pilot remain unverified.
 
 ## Find your starting point
 
@@ -22,6 +25,7 @@ Choose a guide by the question you need to answer.
 | How do signed records establish a verifiable history? | [Audit rail][ref-4] |
 | How do bytes move into a verified handover? | [Chain of custody][ref-5] |
 | Which specification owns a behavior? | [Specification guide][ref-6] |
+| How do I style websites and documents? | [Visual identity][ref-7] |
 
 ## Read at three depths
 
@@ -29,9 +33,9 @@ The documentation offers three levels without requiring a full spec read.
 
 1. Read the [project brief](PORTFOLIO-OVERVIEW.md) for the problem, design
    choices, and validation evidence.
-2. Follow the [architecture](ARCHITECTURE.md) or [custody walkthrough](CHAIN-OF-CUSTODY.md)
-   for component boundaries and failure behavior.
-4. Open the relevant [specification](SPECIFICATIONS.md), source file, and
+2. Follow the [architecture](ARCHITECTURE.md) or [custody walkthrough]
+   (CHAIN-OF-CUSTODY.md) for component boundaries and failure behavior.
+3. Open the relevant [specification](SPECIFICATIONS.md), source file, and
    test when you need the exact contract.
 
 ## Understand the evidence
@@ -43,17 +47,22 @@ what a particular validation run checked.
 A passing historical report does not establish that the current checkout
 passes. A partially implemented specification can describe both available
 behavior and planned extensions. [Open work](../specs/OPEN-WORK.md) names
-remaining gaps; the linked spec defines the requirement.
+remaining gaps; the linked spec defines the requirement. The
+[native cutover contract](../specs/SPEC-native-engine-cutover.md) owns current
+resume, retirement, and compatibility rules. Historical aria2 reports describe
+the earlier engine. Non-active version 2 schemas require their matching
+retained build.
 
 ## Next steps
 
 Start with the [project brief](PORTFOLIO-OVERVIEW.md), or open the
 [operator guide](OPERATOR-GUIDE.md) when you have an authorized case to run.
 
-[banner]: assets/tod-dl-banner.png
 [ref-1]: PORTFOLIO-OVERVIEW.md
 [ref-2]: PORTFOLIO-OVERVIEW.md#engineering-decisions
 [ref-3]: OPERATOR-GUIDE.md
 [ref-4]: AUDIT-RAIL.md
 [ref-5]: CHAIN-OF-CUSTODY.md
 [ref-6]: SPECIFICATIONS.md
+[ref-7]: VISUAL-IDENTITY.md
+[banner]: assets/tod-dl-banner.svg

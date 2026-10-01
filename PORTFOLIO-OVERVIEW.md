@@ -2,8 +2,6 @@
 
 [Documentation](README.md) / Project brief
 
-![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
-
 **Systems engineering for acquisition that can fail halfway through.**
 
 TOD-DL is a forensic acquisition portfolio project. It combines transfer
@@ -21,7 +19,9 @@ not show a live acquisition or establish source authenticity.
 
 The animation plays once. Open the [static image][motion-still] for a still
 view, or download the [interactive page][motion-page] and open it in a
-browser. The page provides stage selection, pause, and keyboard controls.
+browser. The interactive page uses the Signal specification-cover design:
+bold type, a vermilion panel, nested squares, and diagonal arrows. The page
+provides stage selection, pause, and keyboard controls.
 It starts paused when your system requests reduced motion.
 
 The sequence illustrates the design. The [custody walkthrough]
@@ -63,6 +63,19 @@ Review the [provenance writer](../src/provenance/__init__.py) and
 [run custody contract](../specs/SPEC-run-custody.md). Rollback detection still
 needs an index digest retained outside the case directory.
 
+### Authenticate bytes before native continuation
+
+Native URL-queue workers record range receipts through the controller staging
+sink. Continuation needs authenticated coverage, a successful prefix reread,
+and strong ETag or trusted-checksum protection. Response checks precede append;
+recovery preserves uncertain suffix bytes before restoring the prefix.
+
+Review [native workers](../src/downloader/native_transfer.py),
+[recovery](../src/downloader/native_recovery.py), and
+[range tests](../tests/test_native_ranges.py). The
+[cutover contract][cutover] owns the requirements.
+Complete native acceptance and the operator pilot remain unverified.
+
 ### Keep the console outside acquisition authority
 
 The Textual monitor consumes telemetry and inspection responses. Confirmed
@@ -100,8 +113,9 @@ Review the [transport matrix][transport-report],
 These are historical validation records, not fresh test results. Each
 report states its method, date, and limits.
 
-- **Engine selection, September 20, 2026.** E01–E14 passed with local
+- **Aria2 engine selection, September 20, 2026.** E01–E14 passed with local
   fixtures on the reported tree. Read the [engine report][engine-report].
+  This historical result does not validate the current native engine.
 - **Transport, September 28, 2026.** The 194 cited tests passed. Header-case
   coverage remains open; descriptor resume is not covered. Read the
   [transport matrix][transport-report].
@@ -143,9 +157,10 @@ A complete run accounts for every selected item; individual outcomes can
 include review, exclusion, or failure. External timestamps apply to signed
 artifacts and do not establish the time of every acquisition event.
 
-Sealed-sidecar export, re-encryption, preservation profiles, and parts of
-transport integration remain open. The [specification guide](SPECIFICATIONS.md)
-links the relevant contracts without treating planned behavior as available.
+Native acceptance, the operator pilot, sealed-sidecar export, re-encryption,
+preservation profiles, and parts of transport integration remain open. The
+[specification guide](SPECIFICATIONS.md) links the relevant contracts without
+treating planned behavior as available.
 
 ## Next steps
 
@@ -153,13 +168,13 @@ Read the [architecture](ARCHITECTURE.md) for component boundaries, or follow
 one file through the [chain of custody](CHAIN-OF-CUSTODY.md).
 For use permissions, read the [license](../LICENSE).
 
+[cutover]: ../specs/SPEC-native-engine-cutover.md
 [engine-report]: ../specs/reports/acquisition-tool-evaluation-2026-09-20e.md
 [transport-report]:
   ../specs/reports/descriptor-transport-t01-t10-matrix-2026-09-28.md
 [timestamp-report]:
   ../specs/reports/external-timestamping-acceptance-2026-09-24.md
 
-[banner]: assets/tod-dl-banner.png
 [ref-1]: ../.github/workflows/ci.yml
 [motion]: assets/acquisition-motion.gif
 [motion-still]: assets/acquisition-motion.png
