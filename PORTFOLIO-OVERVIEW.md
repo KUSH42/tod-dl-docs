@@ -175,6 +175,7 @@ For use permissions, read the [license](../LICENSE).
 [timestamp-report]:
   ../specs/reports/external-timestamping-acceptance-2026-09-24.md
 
+[banner]: docs/assets/tod-dl-banner.png
 [ref-1]: ../.github/workflows/ci.yml
 [motion]: assets/acquisition-motion.gif
 [motion-still]: assets/acquisition-motion.png
