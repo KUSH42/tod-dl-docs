@@ -2,8 +2,6 @@
 
 [Documentation](README.md) / Specifications
 
-![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
-
 Use the specifications as an engineering reference library. Start with a
 system concern, then follow its contract to source, tests, and dated reports.
 For an introduction, read the [project brief](PORTFOLIO-OVERVIEW.md).
@@ -186,6 +184,7 @@ Use [architecture](ARCHITECTURE.md) to find an implementation owner.
 Use [open work](../specs/OPEN-WORK.md) to identify the next unfinished contract.
 
 <<<<<<< HEAD:SPECIFICATIONS.md
+<<<<<<< HEAD:SPECIFICATIONS.md
 <<<<<<< HEAD
 [banner]: assets/tod-dl-banner.png
 =======
@@ -195,3 +194,6 @@ Use [open work](../specs/OPEN-WORK.md) to identify the next unfinished contract.
 [banner]: docs/assets/tod-dl-banner.svg
 [ref-1]: ../specs/SPEC-acquisition-evaluation-infrastructure.md
 >>>>>>> 1d08165 (docs: update banner):docs/SPECIFICATIONS.md
+=======
+[ref-1]: ../specs/SPEC-acquisition-evaluation-infrastructure.md
+>>>>>>> c196150 (docs: updated logo design):docs/SPECIFICATIONS.md

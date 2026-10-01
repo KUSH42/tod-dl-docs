@@ -2,8 +2,11 @@
 
 [Documentation](README.md) / Chain of custody
 
+<<<<<<< HEAD:CHAIN-OF-CUSTODY.md
 [banner]: docs/assets/tod-dl-banner.svg
 
+=======
+>>>>>>> c196150 (docs: updated logo design):docs/CHAIN-OF-CUSTODY.md
 This guide follows selected input through acquisition, recovery,
 verification, and handover. TOD-DL records the local acquisition segment.
 The operator remains responsible for source authorization, key custody,
@@ -181,11 +184,16 @@ Use the [operator guide](OPERATOR-GUIDE.md) for commands and prerequisites.
 Read the [audit rail](AUDIT-RAIL.md) for authentication and trust limits.
 
 <<<<<<< HEAD:CHAIN-OF-CUSTODY.md
+<<<<<<< HEAD:CHAIN-OF-CUSTODY.md
 [cutover]: ../specs/SPEC-native-engine-cutover.md
 [native-tests]: ../tests/test_native_recovery.py
 =======
 [banner]: docs/assets/tod-dl-banner.png
 >>>>>>> 1d08165 (docs: update banner):docs/CHAIN-OF-CUSTODY.md
+=======
+[cutover]: ../specs/SPEC-native-engine-cutover.md
+[native-tests]: ../tests/test_native_recovery.py
+>>>>>>> c196150 (docs: updated logo design):docs/CHAIN-OF-CUSTODY.md
 [custody]: ../specs/SPEC-run-custody.md
 [reliable]: ../specs/SPEC-reliable-acquisition.md
 [transport]: ../specs/SPEC-http-transport.md

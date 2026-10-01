@@ -175,7 +175,10 @@ For use permissions, read the [license](../LICENSE).
 [timestamp-report]:
   ../specs/reports/external-timestamping-acceptance-2026-09-24.md
 
+<<<<<<< HEAD:PORTFOLIO-OVERVIEW.md
 [banner]: docs/assets/tod-dl-banner.png
+=======
+>>>>>>> c196150 (docs: updated logo design):docs/PORTFOLIO-OVERVIEW.md
 [ref-1]: ../.github/workflows/ci.yml
 [motion]: assets/acquisition-motion.gif
 [motion-still]: assets/acquisition-motion.png
