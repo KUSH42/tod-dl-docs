@@ -59,6 +59,18 @@ Events beyond the last authenticated checkpoint remain an unsigned tail.
 The verifier reports that boundary. Recovery can append a new account of
 interrupted work; it cannot rewrite a past signed artifact.
 
+### Native received-byte coverage
+
+Native range receipts bind received and stored digests to an item, attempt,
+and staging generation. Only checkpoint-authenticated receipts can authorize
+continuation. The controller rereads the protected prefix before appending.
+Finalization checks exact authenticated coverage and rereads each range.
+Unsigned suffix bytes remain preserved without received-byte claims.
+
+The [range ledger](../src/provenance/native_ranges.py) checks receipt coverage.
+[Native cutover][cutover] owns continuation and recovery rules. These records
+do not establish source authenticity or complete native acceptance.
+
 ### Session context
 
 Each revised version 2 session records component artifacts, environment,
@@ -93,8 +105,14 @@ the separate `legacy-v1` profile.
 
 The [schema registry][registry] owns revision labels and digests.
 [Manifest evolution][evolution] owns the evolution contract. Guides must not
-copy an active digest that can become stale. Archived-reader policy remains
-an open issue in the [work register][open-work].
+copy an active digest that can become stale. Use `schema_record_digest()`
+from [`provenance`](../src/provenance/__init__.py) for canonical schema pins.
+File-byte digests and canonical record digests serve different purposes.
+
+The active version 2 reader rejects non-active schema digests. Use the matching
+retained build for archived records and keep their captured schemas unchanged.
+[Native cutover][cutover] owns compatibility refusal for the native release;
+the [work register][open-work] lists remaining general schema-policy work.
 
 ## What verification establishes
 
@@ -170,7 +188,9 @@ complete custody outside the tool.
   final files against later modification.
 - A recipient receipt needs independently trusted recipient information.
   Without it, acceptance remains unconfirmed.
-- Planned body-integrity and preservation profiles do not become available
+- Native receipt coverage has implemented code and focused tests. Complete
+  native acceptance and the operator pilot remain unverified.
+- Remaining body-integrity and preservation profiles do not become available
   merely because the record schema can evolve.
 
 ## Next steps
@@ -179,7 +199,7 @@ Follow the [chain of custody](CHAIN-OF-CUSTODY.md) for the byte lifecycle.
 Use [verification and export commands][operate] for an actual case.
 Read [open work][open-work] before treating a planned claim as implemented.
 
-[banner]: assets/tod-dl-banner.png
+[cutover]: ../specs/SPEC-native-engine-cutover.md
 [custody]: ../specs/SPEC-run-custody.md
 [legacy]: ../specs/SPEC-acquisition-provenance.md
 [operate]: OPERATOR-GUIDE.md#verify-provenance
@@ -193,3 +213,5 @@ Read [open work][open-work] before treating a planned claim as implemented.
   ../specs/reports/external-timestamping-acceptance-2026-09-24.md
 [sealed-export]: ../specs/SPEC-sealed-sidecar-handover.md
 [sealed-multi]: ../specs/SPEC-sealed-multi-recipient.md
+
+[banner]: assets/tod-dl-banner.svg

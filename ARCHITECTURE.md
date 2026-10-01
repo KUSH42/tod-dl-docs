@@ -18,7 +18,7 @@ separate internal path; their public release gate remains closed.
 flowchart TB
     Q[Queue and retained inputs] --> C[Acquisition controller]
     C --> DB[(SQLite recovery state)]
-    C --> W[aria2 transfer workers]
+    C --> W[Native transfer workers]
     W --> S[Staging]
     S --> V[Validation and promotion]
     V --> F[Final files]
@@ -46,7 +46,9 @@ Start with the owning component when tracing a behavior.
 | Concern | Source | Contract |
 | --- | --- | --- |
 | CLI and lifecycle | [CLI][ref-1], [core][ref-2] | [Acquisition][reliable] |
-| Transfer | [Admit][ref-3], [transfer][ref-4] | [Flow][reliable] |
+| Transfer | [Admit][ref-3], [native workers][ref-4] | [Cutover][cutover] |
+| Prefix recovery | [Recovery][native-recovery] | [Resume][cutover] |
+| Receipt coverage | [Range ledger][native-ranges] | [Body integrity][body] |
 | Promotion | [State][ref-5], [storage][ref-6] | [Recovery][recovery] |
 | Console and endpoints | [UI][ref-7], [IPC][ref-8] | [Console][console] |
 | Signed records | [Provenance][ref-9] | [Custody][custody] |
@@ -80,9 +82,19 @@ supply its own apparent trust. See the [audit guide](AUDIT-RAIL.md).
 
 ## The transport boundary
 
-The legacy URL-queue path uses aria2. Route selection resolves Tor, direct,
-or configured proxy behavior, subject to version-specific admission guards.
-An onion host requires Tor; a required Tor route has no direct fallback.
+URL queues use native workers and the controller staging sink. Route
+selection resolves Tor, direct, or a configured HTTP proxy. HTTP and HTTPS
+URL queues use checked response heads. Tor body transfers use isolated child
+processes through `torsocks`; an onion host has no direct fallback.
+
+A continuation needs authenticated receipts, a reread prefix, and strong ETag
+or trusted-checksum protection. The controller checks the response before
+appending bytes. Recovery preserves uncertain suffixes before installing the
+authenticated prefix. [Native cutover][cutover] owns these rules.
+
+The active controller refuses retired engines and incompatible schema pins
+before runtime writes or source contact. Archived runs need matching retained
+builds. Complete native acceptance and the operator pilot remain unverified.
 
 Descriptor components use item identities and a separate streaming adapter.
 Do not infer public support from an adapter test. `run_locked()` in
@@ -105,7 +117,6 @@ exclusion have distinct effects described in the [operator guide][ref-15].
 Use the [development guide](DEVELOPMENT.md) to select focused tests.
 Use the [specification guide](SPECIFICATIONS.md) to trace an exact contract.
 
-[banner]: assets/tod-dl-banner.png
 [reliable]: ../specs/SPEC-reliable-acquisition.md
 [recovery]: ../specs/SPEC-acquisition-fault-recovery.md
 [console]: ../specs/SPEC-console-ui.md
@@ -117,7 +128,11 @@ Use the [specification guide](SPECIFICATIONS.md) to trace an exact contract.
 [ref-1]: ../src/tod_dl.py
 [ref-2]: ../src/downloader/core.py
 [ref-3]: ../src/downloader/admission.py
-[ref-4]: ../src/downloader/transfer.py
+[ref-4]: ../src/downloader/native_transfer.py
+[native-recovery]: ../src/downloader/native_recovery.py
+[native-ranges]: ../src/provenance/native_ranges.py
+[cutover]: ../specs/SPEC-native-engine-cutover.md
+[body]: ../specs/SPEC-response-body-integrity.md
 [ref-5]: ../src/downloader/state.py
 [ref-6]: ../src/downloader/storage.py
 [ref-7]: ../src/console/
@@ -129,3 +144,5 @@ Use the [specification guide](SPECIFICATIONS.md) to trace an exact contract.
 [ref-13]: ../src/downloader/request_descriptors.py
 [ref-14]: ../src/evaluation/
 [ref-15]: OPERATOR-GUIDE.md#monitor-and-control-a-run
+
+[banner]: assets/tod-dl-banner.svg

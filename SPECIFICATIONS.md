@@ -2,8 +2,6 @@
 
 [Documentation](README.md) / Specifications
 
-![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
-
 Use the specifications as an engineering reference library. Start with a
 system concern, then follow its contract to source, tests, and dated reports.
 For an introduction, read the [project brief](PORTFOLIO-OVERVIEW.md).
@@ -24,6 +22,10 @@ status labels.
 
 These contracts define selection, transfer, storage, and interruption handling.
 
+- [Native transfer](../specs/SPEC-native-transfer-engine.md): native worker
+  boundaries and release 1 requirements.
+- [Native cutover](../specs/SPEC-native-engine-cutover.md): protected resume,
+  engine retirement, compatibility, and the current acceptance gate.
 - [Reliable acquisition](../specs/SPEC-reliable-acquisition.md): selection,
   retries, resource admission, validation, and finalization.
 - [Fault recovery](../specs/SPEC-acquisition-fault-recovery.md): required
@@ -55,7 +57,7 @@ These contracts define recorded claims and the evidence required to check them.
 - [External timestamping](../specs/SPEC-external-timestamping.md): submission,
   retained evidence, trust, and release policy.
 - [Response-body integrity](../specs/SPEC-response-body-integrity.md): the
-  planned received-byte and final-file coverage contract.
+  received-byte and final-file coverage, with remaining profile work.
 - [Sealed-sidecar handover](../specs/SPEC-sealed-sidecar-handover.md): the
   planned export inclusion policy.
 - [Multiple sealed recipients](../specs/SPEC-sealed-multi-recipient.md):
@@ -117,7 +119,9 @@ These contracts define how transfer engines are tested against local fixtures.
 
 The [project brief](PORTFOLIO-OVERVIEW.md#validation-evidence) links selected
 reports with dates and limits. Browse [all reports](../specs/reports/) when
-reviewing a specific acceptance gate.
+reviewing a specific acceptance gate. Native cutover requires its complete
+matrix and operator pilot. Historical aria2 evaluation does not establish
+native acceptance.
 
 ## Publication proposal
 
@@ -179,5 +183,6 @@ that pipeline exists. Source specs and their history remain the authority.
 Use [architecture](ARCHITECTURE.md) to find an implementation owner.
 Use [open work](../specs/OPEN-WORK.md) to identify the next unfinished contract.
 
-[banner]: assets/tod-dl-banner.png
 [ref-1]: ../specs/SPEC-acquisition-evaluation-infrastructure.md
+
+[banner]: assets/tod-dl-banner.svg

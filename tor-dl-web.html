@@ -309,7 +309,7 @@
               provenance records. Concept illustration, not live case data.">
             <canvas aria-hidden="true"></canvas>
             <svg class="fallback" viewBox="0 0 540 400" aria-hidden="true">
-              <g fill="none" stroke="#191a19" stroke-width="2">
+              <g fill="none" stroke="var(--accent)" stroke-width="2">
                 <path d="M150 75h240v240H150z M185 110h170v170H185z
                   M220 145h100v100H220z"/>
                 <path d="m270 195 135 135m-45 0h45v-45" stroke-width="6"/>
@@ -389,7 +389,7 @@
       const arrow = mark.querySelector('.logo-arrow');
       let animations = [];
       let state = 'finished';
-      let visible = true;
+      let visible = false;
 
       function updateControl() {
         const labels = {
@@ -405,6 +405,7 @@
         control.append(symbol);
       }
       function syncLogo() {
+        if (state === 'finished') { updateControl(); return; }
         animations.forEach(animation => {
           if (state === 'playing' && visible && !document.hidden) animation.play();
           else animation.pause();
@@ -413,17 +414,21 @@
       }
       function startLogo() {
         animations.forEach(animation => animation.cancel());
-        const timing = { duration: 1500, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'both' };
-        animations = frames.map((frame, index) => frame.animate([
-          { strokeDasharray: '1', strokeDashoffset: '1', opacity: 0 },
-          { strokeDasharray: '1', strokeDashoffset: '0', opacity: 1 }
-        ], { ...timing, delay: index * 350 }));
-        const finish = arrow.animate([
-          { strokeDasharray: '1', strokeDashoffset: '1', opacity: 0 },
-          { strokeDasharray: '1', strokeDashoffset: '0', opacity: 1 }
-        ], { ...timing, delay: 1500 });
-        animations.push(finish);
+        const timing = { duration: 4800, fill: 'both' };
+        function drawStroke(element, start, end) {
+          return element.animate([
+            { offset: 0, strokeDasharray: '1', strokeDashoffset: '1', opacity: 0 },
+            { offset: start, strokeDasharray: '1', strokeDashoffset: '1', opacity: 1,
+              easing: 'cubic-bezier(.2,.7,.2,1)' },
+            { offset: end, strokeDasharray: '1', strokeDashoffset: '0', opacity: 1 },
+            { offset: 1, strokeDasharray: '1', strokeDashoffset: '0', opacity: 1 }
+          ], timing);
+        }
+        animations = frames.map((frame, index) =>
+          drawStroke(frame, .04 + index * .07, .34 + index * .07));
+        const finish = drawStroke(arrow, .35, .65);
         finish.onfinish = () => { state = 'finished'; updateControl(); };
+        animations.push(finish);
         state = 'playing';
         syncLogo();
       }
@@ -433,18 +438,21 @@
       });
       reduced.addEventListener('change', () => {
         if (reduced.matches) {
-          animations.forEach(animation => animation.finish());
+          animations.forEach(animation => animation.cancel());
+          animations = [];
           state = 'finished'; updateControl();
         }
       });
       document.addEventListener('visibilitychange', syncLogo);
       new IntersectionObserver(entries => {
-        visible = entries[0].isIntersecting;
-        if (state !== 'finished') syncLogo();
+        const inView = entries[entries.length - 1].isIntersecting;
+        const entered = inView && !visible;
+        visible = inView;
+        if (entered && !reduced.matches && state !== 'paused') startLogo();
+        else syncLogo();
       }).observe(mark);
       control.hidden = false;
-      if (reduced.matches) updateControl();
-      else startLogo();
+      updateControl();
     })();
   </script>
   <script>
@@ -460,7 +468,9 @@
       const stageNames = phases.map(button => button.querySelector('strong').textContent.replace('.', ''));
       const duration = Number(scrubber.max);
       const stageDuration = duration / phases.length;
-      const accent = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim();
+      const palette = getComputedStyle(document.documentElement);
+      const accent = palette.getPropertyValue('--accent').trim();
+      const ink = palette.getPropertyValue('--ink').trim();
       let time = reduced.matches ? stageDuration * 1.5 : 0;
       let playing = !reduced.matches;
       let last = null;
@@ -487,10 +497,10 @@
         const scale = Math.min(width / 540, height / 490);
         return [width / 2 + x * scale * perspective, height / 2 + point[1] * scale * perspective, perspective, scale];
       }
-      function line(points, alpha = .25, lineWidth = .7) {
+      function line(points, alpha = .25, lineWidth = .7, color = accent) {
         ctx.beginPath();
         points.forEach((p, i) => { const q = project(p); if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); });
-        ctx.strokeStyle = accent; ctx.globalAlpha = alpha; ctx.lineWidth = lineWidth; ctx.stroke();
+        ctx.strokeStyle = color; ctx.globalAlpha = alpha; ctx.lineWidth = lineWidth; ctx.stroke();
       }
       function draw() {
         ctx.clearRect(0, 0, width, height);
@@ -498,7 +508,7 @@
         const within = (time - stage * stageDuration) / stageDuration;
         const assemble = ease((time - stageDuration + 1.4) / 2.3);
         const trace = ease((time - stageDuration * 2 + 1.4) / 2.3);
-        const reset = 0;
+        const reset = ease((time - duration + 1.8) / 1.8);
         const rotation = time / duration * Math.PI * 2;
         const center = project([0, 0, 0]);
         const scale = center[3];
@@ -506,10 +516,10 @@
         for (let square = 0; square < 3; square++) {
           const radius = 185 - square * 40;
           line([[-radius,-radius,0],[radius,-radius,0],
-            [radius,radius,0],[-radius,radius,0],[-radius,-radius,0]], .22, 1);
+            [radius,radius,0],[-radius,radius,0],[-radius,-radius,0]], .22, 1, ink);
         }
-        line([[40,40,0],[205,205,0],[165,205,0]], .7, 2);
-        line([[205,165,0],[205,205,0]], .7, 2);
+        line([[40,40,0],[205,205,0],[165,205,0]], .35, 2, ink);
+        line([[205,165,0],[205,205,0]], .35, 2, ink);
         const projected = nodes.map((node, i) => {
           const spun = [node.sphere[0] * Math.cos(rotation) + node.sphere[2] * Math.sin(rotation), node.sphere[1], -node.sphere[0] * Math.sin(rotation) + node.sphere[2] * Math.cos(rotation)];
           const point = spun.map((v, axis) => mix(mix(mix(v, node.file[axis], assemble), node.chain[axis], trace), v, reset));
@@ -517,7 +527,7 @@
         }).sort((a, b) => a.point[2] - b.point[2]);
         for (const { point: p, i } of projected) {
           ctx.globalAlpha = Math.max(.15, Math.min(.9, (p[2] - .65) * 1.65));
-          ctx.fillStyle = i % 9 === 0 ? accent : accent;
+          ctx.fillStyle = i % 9 === 0 ? ink : accent;
           const size = (i % 17 === 0 ? 2.3 : 1.45) * scale * p[2];
           ctx.beginPath(); ctx.arc(p[0], p[1], size, 0, Math.PI * 2); ctx.fill();
         }
@@ -537,7 +547,7 @@
             if (i < 1) line([[x+50,y,0],[x+69,y,0],[x+69,y-45,0],[x+89,y-45,0]], chainAlpha, 1.2);
           }
         }
-        ctx.globalAlpha = .65; ctx.fillStyle = accent; ctx.font = '9px monospace';
+        ctx.globalAlpha = .8; ctx.fillStyle = ink; ctx.font = '9px monospace';
         const labels = [['SELECTED BYTES',[-205,-195,0]],['DURABLE STATE',[85,204,0]]];
         labels.forEach(([text, p]) => { const q = project(p); ctx.fillText(text, q[0], q[1]); });
         ctx.globalAlpha = 1;
@@ -557,10 +567,9 @@
       function tick(now) {
         frame = null;
         if (last !== null) {
-          time = Math.min(duration, time + Math.min((now - last) / 1000, .1));
+          time = (time + Math.min((now - last) / 1000, .1)) % duration;
         }
-        last = now; draw();
-       schedule();
+        last = now; draw(); schedule();
       }
       function schedule() {
         if (playing && visible && !document.hidden && frame === null) frame = requestAnimationFrame(tick);
@@ -579,6 +588,7 @@
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0); draw();
       }
       play.addEventListener('click', () => {
+        if (time >= duration) time = 0;
         playing = !playing; syncPlayback();
       });
       phases.forEach((button, i) => button.addEventListener('click', () => {

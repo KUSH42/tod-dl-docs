@@ -50,18 +50,20 @@ the context declaration described in the [operator guide][prepare].
 
 ## 2. Transfer into staging
 
-Workers write staged bytes rather than final files. The controller checks
-route requirements and storage admission before starting a transfer. Tor
+Native workers write staged bytes through the controller sink. The controller
+checks route requirements and storage admission before starting a transfer. Tor
 isolation applies to the configured SocksPort and is checked through the
 ControlPort.
 
-An operator stop preserves partial bytes. A later resume must still satisfy
-representation checks; a changed or unconfirmed remote version enters
-review. A partial file alone does not authorize concatenating new bytes.
+An operator stop preserves staged bytes. Native continuation uses only a
+checkpoint-authenticated prefix that passes a reread and version-protection
+checks. A strong ETag or trusted expected checksum supplies protection; weak
+or missing ETags alone cannot. A rejected response head preserves the prefix
+and enters review before any append.
 
-[HTTP transport][transport] owns request and resume checks. Its descriptor
-extensions use a separate internal path and remain unavailable through the
-public acquisition CLI.
+[Native cutover][cutover] owns resume eligibility and suffix preservation.
+[HTTP transport][transport] owns transport checks. Descriptor extensions use
+a separate internal path and remain unavailable through the public CLI.
 
 ## 3. Validate before promotion
 
@@ -126,6 +128,13 @@ Signed checkpoints authenticate retained event prefixes after an unclean
 stop. Events outside an authenticated prefix remain explicitly unverified.
 Recovery records do not turn missing evidence into a historical fact.
 
+Native recovery preserves unsigned suffix bytes as candidate evidence before
+installing an authenticated prefix. Receipts can cover several attempts in
+one staging generation. A replacement generation cannot use earlier receipt
+coverage. Live signing repair stops writers before recovery and resumes only
+after confirmation. [Native recovery tests][native-tests] check preservation
+and replay; the complete acceptance matrix remains unverified.
+
 ## 6. Verify a closed run
 
 The operator supplies the trusted public key, externally retained run-index
@@ -171,7 +180,8 @@ remain with the operator.
 Use the [operator guide](OPERATOR-GUIDE.md) for commands and prerequisites.
 Read the [audit rail](AUDIT-RAIL.md) for authentication and trust limits.
 
-[banner]: assets/tod-dl-banner.png
+[cutover]: ../specs/SPEC-native-engine-cutover.md
+[native-tests]: ../tests/test_native_recovery.py
 [custody]: ../specs/SPEC-run-custody.md
 [reliable]: ../specs/SPEC-reliable-acquisition.md
 [transport]: ../specs/SPEC-http-transport.md
@@ -179,3 +189,5 @@ Read the [audit rail](AUDIT-RAIL.md) for authentication and trust limits.
 [prepare]: OPERATOR-GUIDE.md#prepare-the-case-and-context
 [review]: OPERATOR-GUIDE.md#review-a-candidate
 [handover]: OPERATOR-GUIDE.md#handover-export
+
+[banner]: assets/tod-dl-banner.svg

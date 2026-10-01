@@ -31,6 +31,10 @@ Follow the behavior from its entry point to the relevant tests.
 | Area | Source | Tests |
 | --- | --- | --- |
 | Acquisition and recovery | [Controller][ref-1] | [Behavior][ref-2] |
+| Native transfer | [Workers][native-transfer] | [Controller][native-tests] |
+| Authenticated ranges | [Ledger][native-ranges] | [Coverage][range-tests] |
+| Prefix recovery | [Recovery][native-recovery] | [Replay][recovery-tests] |
+| Engine retirement | [Workers][native-transfer] | [Cutover][cutover-tests] |
 | Interrupted finalization | [Storage][ref-3] | [Recovery][ref-4] |
 | Canonical signed bytes | [JCS][ref-5] | [Canonicalization][ref-6] |
 | Inventory lineage | [Rederivation][ref-7] | [Lineage][ref-8] |
@@ -58,6 +62,18 @@ For deterministic canonicalization checks:
 python3 -m unittest tests.test_jcs -v
 ```
 
+For native transfer, prefix recovery, and compatibility checks:
+
+```bash
+python3 -m unittest tests.test_native_controller tests.test_native_ranges
+python3 -m unittest tests.test_native_recovery tests.test_native_cutover
+python3 -m unittest tests.test_archived_engine_retention
+```
+
+Include schema, finalization, and session-order modules when the change crosses
+those boundaries. Passing focused tests does not establish the complete
+acceptance matrix in [native cutover][cutover].
+
 Add focused coverage for recovery, finalization, control, or scheduling
 changes. Test names must state why the behavior matters. Use synthetic
 bytes, fixed clocks, and temporary paths. Pin `TZ` when testing displayed
@@ -66,7 +82,7 @@ time. Follow [AGENTS.md](../AGENTS.md) for the full testing policy.
 Run the relevant syntax and whitespace checks before handing off changes:
 
 ```bash
-python3 -m py_compile src/*.py
+python3 -m compileall -q src
 bash -n ./run.sh
 git diff --check
 ```
@@ -82,7 +98,14 @@ python3 -m unittest discover -s tests -p 'test_*.py' -v
 
 The repository reserves local full-suite runs for an explicit request.
 During development, use focused modules and leave full-suite validation to
-CI. Report skipped tests and environment restrictions with the result.
+CI. Report commands, test counts, warnings, skipped tests, and environment
+restrictions with the result. If the environment blocks sockets, mock listeners
+only in lifecycle tests. Transport acceptance needs real loopback fixtures;
+report blocked cases as unverified. Do not contact a source to bypass a test
+restriction.
+
+For documentation-only changes, check local links, anchors, line lengths, and
+`git diff --check`. Report code tests as skipped.
 
 ## Exercise the local fixture harness
 
@@ -98,6 +121,9 @@ The output directory must be empty. This self-test validates infrastructure;
 it does not repeat the engine selection evaluation. Read the
 [evaluation contract](../specs/SPEC-acquisition-tool-evaluation.md) before
 running engine scenarios.
+The [native evaluation adapter][native-evaluation] drives the current CLI.
+The complete native matrix and operator pilot remain unverified; historical
+aria2 reports do not establish native acceptance.
 
 ## Maintain the documentation
 
@@ -115,7 +141,15 @@ when preparing HTML or PDF editions.
 Choose a behavior in [open work](../specs/OPEN-WORK.md), then read its spec,
 source owner, and tests before proposing an implementation.
 
-[banner]: assets/tod-dl-banner.png
+[native-evaluation]: ../src/evaluation/native_evaluation_adapter.py
+[native-transfer]: ../src/downloader/native_transfer.py
+[native-ranges]: ../src/provenance/native_ranges.py
+[native-recovery]: ../src/downloader/native_recovery.py
+[native-tests]: ../tests/test_native_controller.py
+[range-tests]: ../tests/test_native_ranges.py
+[recovery-tests]: ../tests/test_native_recovery.py
+[cutover-tests]: ../tests/test_native_cutover.py
+[cutover]: ../specs/SPEC-native-engine-cutover.md
 [ref-1]: ../src/downloader/core.py
 [ref-2]: ../tests/test_tod_dl.py
 [ref-3]: ../src/downloader/storage.py
@@ -132,3 +166,5 @@ source owner, and tests before proposing an implementation.
 [ref-14]: ../tests/test_descriptor_transport_acceptance.py
 [ref-15]: ../src/tod_dl.py
 [ref-16]: ../tests/test_control_launch_and_resume_script.py
+
+[banner]: assets/tod-dl-banner.svg
