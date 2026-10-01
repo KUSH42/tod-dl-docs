@@ -120,10 +120,7 @@ exclusion have distinct effects described in the [operator guide][ref-15].
 Use the [development guide](DEVELOPMENT.md) to select focused tests.
 Use the [specification guide](SPECIFICATIONS.md) to trace an exact contract.
 
-<<<<<<< HEAD:ARCHITECTURE.md
-[banner]: docs/assets/tod-dl-banner.png
-=======
->>>>>>> c196150 (docs: updated logo design):docs/ARCHITECTURE.md
+[banner]: assets/tod-dl-banner.svg
 [reliable]: ../specs/SPEC-reliable-acquisition.md
 [recovery]: ../specs/SPEC-acquisition-fault-recovery.md
 [console]: ../specs/SPEC-console-ui.md
