@@ -2,6 +2,8 @@
 
 [Documentation](README.md) / Project brief
 
+![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
+
 **Systems engineering for acquisition that can fail halfway through.**
 
 TOD-DL is a forensic acquisition portfolio project. It combines transfer
@@ -179,5 +181,4 @@ For use permissions, read the [license](../LICENSE).
 [motion]: assets/acquisition-motion.gif
 [motion-still]: assets/acquisition-motion.png
 [motion-page]: assets/acquisition-motion.html
-
 [banner]: assets/tod-dl-banner.svg
