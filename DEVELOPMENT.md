@@ -2,11 +2,8 @@
 
 [Documentation](README.md) / Develop
 
-<<<<<<< HEAD:DEVELOPMENT.md
-[banner]: docs/assets/tod-dl-banner.svg
+![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
 
-=======
->>>>>>> c196150 (docs: updated logo design):docs/DEVELOPMENT.md
 Start with the behavior contract and its owning component. The
 [architecture guide](ARCHITECTURE.md) maps responsibilities; the
 [specification guide](SPECIFICATIONS.md) groups the contracts by subject.
@@ -144,10 +141,6 @@ when preparing HTML or PDF editions.
 Choose a behavior in [open work](../specs/OPEN-WORK.md), then read its spec,
 source owner, and tests before proposing an implementation.
 
-<<<<<<< HEAD:DEVELOPMENT.md
-<<<<<<< HEAD:DEVELOPMENT.md
-=======
->>>>>>> c196150 (docs: updated logo design):docs/DEVELOPMENT.md
 [native-evaluation]: ../src/evaluation/native_evaluation_adapter.py
 [native-transfer]: ../src/downloader/native_transfer.py
 [native-ranges]: ../src/provenance/native_ranges.py
@@ -157,12 +150,6 @@ source owner, and tests before proposing an implementation.
 [recovery-tests]: ../tests/test_native_recovery.py
 [cutover-tests]: ../tests/test_native_cutover.py
 [cutover]: ../specs/SPEC-native-engine-cutover.md
-<<<<<<< HEAD:DEVELOPMENT.md
-=======
-[banner]: docs/assets/tod-dl-banner.png
->>>>>>> 1d08165 (docs: update banner):docs/DEVELOPMENT.md
-=======
->>>>>>> c196150 (docs: updated logo design):docs/DEVELOPMENT.md
 [ref-1]: ../src/downloader/core.py
 [ref-2]: ../tests/test_tod_dl.py
 [ref-3]: ../src/downloader/storage.py
@@ -179,3 +166,5 @@ source owner, and tests before proposing an implementation.
 [ref-14]: ../tests/test_descriptor_transport_acceptance.py
 [ref-15]: ../src/tod_dl.py
 [ref-16]: ../tests/test_control_launch_and_resume_script.py
+
+[banner]: assets/tod-dl-banner.svg

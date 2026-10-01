@@ -2,11 +2,8 @@
 
 [Documentation](README.md) / Audit rail
 
-<<<<<<< HEAD:AUDIT-RAIL.md
-[banner]: docs/assets/tod-dl-banner.svg
+![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
 
-=======
->>>>>>> c196150 (docs: updated logo design):docs/AUDIT-RAIL.md
 TOD-DL records what the controller selected, attempted, finalized, and
 handed over. Version 2 combines hash-chained events, signed checkpoints,
 and signed run indexes. Independent verification checks these artifacts
@@ -202,15 +199,7 @@ Follow the [chain of custody](CHAIN-OF-CUSTODY.md) for the byte lifecycle.
 Use [verification and export commands][operate] for an actual case.
 Read [open work][open-work] before treating a planned claim as implemented.
 
-<<<<<<< HEAD:AUDIT-RAIL.md
-<<<<<<< HEAD:AUDIT-RAIL.md
 [cutover]: ../specs/SPEC-native-engine-cutover.md
-=======
-[banner]: docs/assets/tod-dl-banner.png
->>>>>>> 1d08165 (docs: update banner):docs/AUDIT-RAIL.md
-=======
-[cutover]: ../specs/SPEC-native-engine-cutover.md
->>>>>>> c196150 (docs: updated logo design):docs/AUDIT-RAIL.md
 [custody]: ../specs/SPEC-run-custody.md
 [legacy]: ../specs/SPEC-acquisition-provenance.md
 [operate]: OPERATOR-GUIDE.md#verify-provenance
@@ -224,3 +213,5 @@ Read [open work][open-work] before treating a planned claim as implemented.
   ../specs/reports/external-timestamping-acceptance-2026-09-24.md
 [sealed-export]: ../specs/SPEC-sealed-sidecar-handover.md
 [sealed-multi]: ../specs/SPEC-sealed-multi-recipient.md
+
+[banner]: assets/tod-dl-banner.svg

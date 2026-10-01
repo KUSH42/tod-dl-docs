@@ -2,6 +2,8 @@
 
 [Documentation](README.md) / Operate
 
+![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
+
 Use this guide to prepare, run, resume, verify, and export a bounded
 acquisition. Commands run from the repository root and use placeholder case
 paths. Use only material you are authorized to acquire and retain.
@@ -676,3 +678,5 @@ Use the [audit guide](AUDIT-RAIL.md) to interpret verification results.
 [case]: #prepare-the-case-and-context
 [transport]: ../specs/SPEC-http-transport.md
 [sealed]: ../specs/SPEC-sealed-multi-recipient.md
+
+[banner]: assets/tod-dl-banner.svg

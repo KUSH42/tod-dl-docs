@@ -2,11 +2,8 @@
 
 [Documentation](README.md) / Architecture
 
-<<<<<<< HEAD:ARCHITECTURE.md
-[banner]: docs/assets/tod-dl-banner.svg
+![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
 
-=======
->>>>>>> c196150 (docs: updated logo design):docs/ARCHITECTURE.md
 TOD-DL separates acquisition authority, operator interaction, and independent
 verification. SQLite owns recovery state. Signed artifacts provide the
 exportable history. The console observes published state and requests
@@ -120,7 +117,6 @@ exclusion have distinct effects described in the [operator guide][ref-15].
 Use the [development guide](DEVELOPMENT.md) to select focused tests.
 Use the [specification guide](SPECIFICATIONS.md) to trace an exact contract.
 
-[banner]: assets/tod-dl-banner.svg
 [reliable]: ../specs/SPEC-reliable-acquisition.md
 [recovery]: ../specs/SPEC-acquisition-fault-recovery.md
 [console]: ../specs/SPEC-console-ui.md
@@ -148,3 +144,5 @@ Use the [specification guide](SPECIFICATIONS.md) to trace an exact contract.
 [ref-13]: ../src/downloader/request_descriptors.py
 [ref-14]: ../src/evaluation/
 [ref-15]: OPERATOR-GUIDE.md#monitor-and-control-a-run
+
+[banner]: assets/tod-dl-banner.svg

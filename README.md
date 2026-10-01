@@ -1,14 +1,9 @@
-<<<<<<< HEAD
 # TOD-DL documentation
 
 [Repository](../README.md) / Documentation
 
-<<<<<<<< HEAD:README.md
 ![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
-[banner]: assets/tod-dl-banner.svg
 
-========
->>>>>>>> c196150 (docs: updated logo design):docs/README.md
 TOD-DL combines resumable acquisition, durable recovery, and signed custody
 records. These guides explain how to use the software and how to evaluate
 its engineering. URL queues use the native engine. Protected resume requires
@@ -68,16 +63,8 @@ Start with the [project brief](PORTFOLIO-OVERVIEW.md), or open the
 [ref-4]: AUDIT-RAIL.md
 [ref-5]: CHAIN-OF-CUSTODY.md
 [ref-6]: SPECIFICATIONS.md
-<<<<<<<< HEAD:README.md
-<<<<<<< HEAD:README.md
 [ref-7]: VISUAL-IDENTITY.md
-[banner]: assets/tod-dl-banner.svg
-=======
->>>>>>> 1d08165 (docs: update banner):docs/README.md
-========
-[ref-7]: VISUAL-IDENTITY.md
->>>>>>>> c196150 (docs: updated logo design):docs/README.md
-=======
+
 # Specification artifacts
 
 `build-html-pdf.js` owns the HTML and PDF presentation for this renderer.
@@ -164,4 +151,5 @@ fails the build.
 
 `../../specs/build-pdf.js` is a separate copy of the older renderer. Use
 `build-html-pdf.js` for this design; the older copy does not share its styles.
->>>>>>> c196150 (docs: updated logo design)
+
+[banner]: assets/tod-dl-banner.svg
