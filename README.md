@@ -32,9 +32,9 @@ The documentation offers three levels without requiring a full spec read.
 
 1. Read the [project brief](PORTFOLIO-OVERVIEW.md) for the problem, design
    choices, and validation evidence.
-2. Follow the [architecture](ARCHITECTURE.md) or [custody walkthrough]
-   (CHAIN-OF-CUSTODY.md) for component boundaries and failure behavior.
-3. Open the relevant [specification](SPECIFICATIONS.md), source file, and
+2. Follow the [architecture](ARCHITECTURE.md) or [custody-walkthrough](CHAIN-OF-CUSTODY.md)
+   for component boundaries and failure behavior.
+4. Open the relevant [specification](SPECIFICATIONS.md), source file, and
    test when you need the exact contract.
 
 ## Understand the evidence
