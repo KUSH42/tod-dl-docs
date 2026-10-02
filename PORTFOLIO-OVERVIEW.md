@@ -185,7 +185,7 @@ For use permissions, read the [license](../LICENSE).
 [ref-1]: ../.github/workflows/ci.yml
 [motion]: assets/acquisition-motion.gif
 [motion-still]: assets/acquisition-motion.png
-[motion-page]: assets/acquisition-motion.html
+[motion-page]: assets/acquisition-motion-signal.html
 
 [native-evidence]:
   ../specs/reports/native-acquisition-handover-2026-10-01.md
