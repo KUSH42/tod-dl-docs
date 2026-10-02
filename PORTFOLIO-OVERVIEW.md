@@ -17,12 +17,12 @@ not show a live acquisition or establish source authenticity.
 
 ![Points assemble into a file, then form linked provenance records.][motion]
 
-The animation plays once. Open the [static image][motion-still] for a still
-view, or download the [interactive page][motion-page] and open it in a
-browser. The interactive page uses the Signal specification-cover design:
-bold type, a vermilion panel, nested squares, and diagonal arrows. The page
-provides stage selection, pause, and keyboard controls.
-It starts paused when your system requests reduced motion.
+The animation loops continuously. Open the [static image][motion-still] for a
+still view, or download the [interactive page][motion-page] and open it in a
+browser. The interactive page uses the Signal specification-cover design: bold
+type, a vermilion panel, nested squares, and diagonal arrows. The page provides
+stage selection, pause, and keyboard controls. It starts paused when your system
+requests reduced motion.
 
 The sequence illustrates the design. The [custody walkthrough]
 (CHAIN-OF-CUSTODY.md) explains the actual ordering and recovery rules.
