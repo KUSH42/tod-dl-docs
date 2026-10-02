@@ -1,0 +1,1837 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="TOD-DL system architecture and engineering specifications.">
+  <meta name="color-scheme" content="light">
+  <title>TOD-DL — Architecture &amp; engineering specifications</title>
+  <style>
+    pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em
+}
+code.hljs {
+  padding: 3px 5px
+}
+/*!
+  Theme: GitHub
+  Description: Light theme as seen on github.com
+  Author: github.com
+  Maintainer: @Hirse
+  Updated: 2021-05-15
+
+  Outdated base version: https://github.com/primer/github-syntax-light
+  Current colors taken from GitHub's CSS
+*/
+.hljs {
+  color: #24292e;
+  background: #ffffff
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-variable.language_ {
+  /* prettylights-syntax-keyword */
+  color: #d73a49
+}
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+  /* prettylights-syntax-entity */
+  color: #6f42c1
+}
+.hljs-attr,
+.hljs-attribute,
+.hljs-literal,
+.hljs-meta,
+.hljs-number,
+.hljs-operator,
+.hljs-variable,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-id {
+  /* prettylights-syntax-constant */
+  color: #005cc5
+}
+.hljs-regexp,
+.hljs-string,
+.hljs-meta .hljs-string {
+  /* prettylights-syntax-string */
+  color: #032f62
+}
+.hljs-built_in,
+.hljs-symbol {
+  /* prettylights-syntax-variable */
+  color: #e36209
+}
+.hljs-comment,
+.hljs-code,
+.hljs-formula {
+  /* prettylights-syntax-comment */
+  color: #6a737d
+}
+.hljs-name,
+.hljs-quote,
+.hljs-selector-tag,
+.hljs-selector-pseudo {
+  /* prettylights-syntax-entity-tag */
+  color: #22863a
+}
+.hljs-subst {
+  /* prettylights-syntax-storage-modifier-import */
+  color: #24292e
+}
+.hljs-section {
+  /* prettylights-syntax-markup-heading */
+  color: #005cc5;
+  font-weight: bold
+}
+.hljs-bullet {
+  /* prettylights-syntax-markup-list */
+  color: #735c0f
+}
+.hljs-emphasis {
+  /* prettylights-syntax-markup-italic */
+  color: #24292e;
+  font-style: italic
+}
+.hljs-strong {
+  /* prettylights-syntax-markup-bold */
+  color: #24292e;
+  font-weight: bold
+}
+.hljs-addition {
+  /* prettylights-syntax-markup-inserted */
+  color: #22863a;
+  background-color: #f0fff4
+}
+.hljs-deletion {
+  /* prettylights-syntax-markup-deleted */
+  color: #b31d28;
+  background-color: #ffeef0
+}
+.hljs-char.escape_,
+.hljs-link,
+.hljs-params,
+.hljs-property,
+.hljs-punctuation,
+.hljs-tag {
+  /* purposely ignored */
+  
+}
+    /* Preserve the CSS margin boxes and the renderer's zero PDF margins. */
+    @page {
+      size: A4 portrait;
+      margin: 33mm 20mm 33mm 20mm;
+      background-color: #f2f0e9;
+      @top-left {
+        content: "TOD-DL / ENGINEERING";
+        font-family: Arial, sans-serif;
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        color: #585952;
+      }
+      @top-right {
+        content: "SPECIFICATION SUITE";
+        font-family: Arial, sans-serif;
+        font-size: 10px;
+        letter-spacing: 1px;
+        color: #585952;
+      }
+      @bottom-left {
+        content: "System specs / 2026-10-02";
+        font-family: Arial, sans-serif;
+        font-size: 10px;
+        color: #585952;
+      }
+      @bottom-right {
+        content: "Page " counter(page) " of " counter(pages);
+        font-family: Arial, sans-serif;
+        font-size: 10px;
+        color: #b52c18;
+      }
+    }
+    @page :first {
+      @top-left { content: none; }
+      @top-right { content: none; }
+      @bottom-left { content: none; }
+      @bottom-right { content: none; }
+    }
+    :root {
+      --ink: #f2f0e9;
+      --panel: #e9e6de;
+      --paper: #191a19;
+      --muted: #585952;
+      --accent: #b52c18;
+      --link: #94301f;
+      --rule: #bebbb1;
+      --code: #87381e;
+      --table: #e0ddd3;
+      --secondary: #41443f;
+      --leader: #94948b;
+      --canvas: #d9d6cd;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 13px;
+      line-height: 1.65;
+      font-variant-ligatures: none;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      color: var(--paper);
+      line-height: 1.25;
+      break-after: avoid;
+      overflow-wrap: anywhere;
+    }
+    h1 { font-size: 32px; font-weight: 500; letter-spacing: -1px; margin: 18px 0 26px; }
+    h2 { font-size: 21px; margin: 30px 0 14px; padding-top: 14px; border-top: 1px solid var(--rule); }
+    h3 { font-size: 16px; margin: 24px 0 10px; }
+    h4, h5, h6 { font-size: 13px; margin: 18px 0 8px; }
+    p { margin: 0 0 14px; orphans: 3; widows: 3; }
+    a { color: var(--link); text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+    a:hover { color: var(--accent); }
+    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    ul, ol { padding-left: 22px; margin: 0 0 16px; }
+    li { margin-bottom: 4px; orphans: 3; widows: 3; }
+    li > p { margin-bottom: 8px; }
+    code { font-family: "DejaVu Sans Mono", Consolas, monospace; font-size: 0.86em; }
+    :not(pre) > code { background: var(--panel); color: var(--code); padding: 2px 4px; border-radius: 3px; overflow-wrap: anywhere; }
+    pre {
+      background: var(--panel);
+      border: 1px solid var(--rule);
+      border-left: 3px solid var(--accent);
+      padding: 14px 16px;
+      margin: 18px 0;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      tab-size: 4;
+      break-inside: auto;
+    }
+    pre code.hljs { padding: 0; background: transparent; white-space: inherit; overflow-wrap: inherit; }
+    table { border-collapse: collapse; width: 100%; margin: 20px 0; font-size: 11.5px; line-height: 1.5; }
+    th, td { padding: 9px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; overflow-wrap: anywhere; }
+    th { color: var(--paper); background: var(--table); text-align: left; font-weight: 600; border-top: 2px solid var(--accent); }
+    tr:nth-child(even) td { background: var(--panel); }
+    tr { break-inside: avoid; }
+    thead { display: table-header-group; }
+    blockquote { margin: 20px 0; padding: 12px 18px; border-left: 2px solid var(--link); background: var(--panel); color: var(--secondary); }
+    blockquote p:last-child { margin-bottom: 0; }
+    hr { margin: 28px 0; border: 0; border-top: 1px solid var(--rule); }
+    img, svg { max-width: 100%; }
+    .mermaid { margin: 24px 0; text-align: center; break-inside: avoid; }
+    .mermaid svg { height: auto; }
+    .cover-page { height: 230mm; position: relative; break-after: page; }
+    .brand { display: flex; align-items: center; gap: 16px; }
+    .brand-mark { width: 54px; height: 58px; flex: none; }
+    .brand-name { font-size: 25px; font-weight: 700; letter-spacing: 5px; line-height: 1.2; }
+    .brand-description { color: var(--muted); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 6px; }
+    .cover-edition { display: flex; justify-content: space-between; margin-top: 44px; padding-top: 14px; border-top: 1px solid var(--rule); }
+    .eyebrow { font-size: 10px; line-height: 1.5; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
+    .cover-edition .eyebrow:last-child { color: var(--muted); letter-spacing: 1px; }
+    .cover-title { font-family: Georgia, "Times New Roman", serif; font-size: 66px; line-height: 1.02; font-weight: 400; letter-spacing: -2.5px; margin: 30px 0 24px; }
+    .cover-title em { font-weight: 400; color: var(--accent); }
+    .cover-subtitle { font-size: 17px; line-height: 1.55; color: var(--muted); max-width: 380px; }
+    .cover-illustration { display: block; width: 100%; height: 220px; margin-top: 22px; }
+    .cover-meta { position: absolute; bottom: 0; left: 0; right: 0; border-top: 1px solid var(--rule); padding-top: 18px; display: flex; gap: 42px; }
+    .cover-meta dt { color: var(--muted); font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 5px; }
+    .cover-meta dd { margin: 0; font-size: 12px; font-variant-numeric: tabular-nums; }
+    .cover-meta .meta-note { max-width: 205px; margin-left: auto; }
+    .cover-meta .meta-note dd { color: var(--muted); font-size: 11px; }
+    .toc-section { break-before: page; }
+    .toc-title { font-family: Georgia, "Times New Roman", serif; font-size: 44px; margin: 14px 0 12px; }
+    .toc-intro { color: var(--muted); font-size: 12px; max-width: 490px; margin-bottom: 25px; }
+    .toc-column-labels { display: flex; justify-content: space-between; border-bottom: 1px solid var(--rule); padding-bottom: 9px; margin-bottom: 18px; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+    .toc-group { margin-bottom: 20px; }
+    .toc-row { display: flex; align-items: baseline; gap: 9px; text-decoration: none; break-inside: avoid; padding: 4px 0; line-height: 1.45; }
+    .toc-chapter { color: var(--paper); font-size: 14px; font-weight: 600; padding: 12px 0 8px; border-top: 1px solid var(--rule); break-after: avoid; }
+    .toc-number { flex: 0 0 27px; color: var(--accent); font-size: 11px; font-weight: 400; font-variant-numeric: tabular-nums; }
+    .toc-label { flex: 0 1 auto; min-width: 0; overflow-wrap: anywhere; }
+    .toc-leader { flex: 1 0 12px; border-bottom: 1px dotted var(--leader); }
+    .toc-page { flex: 0 0 4ch; text-align: right; color: var(--accent); font-family: "DejaVu Sans Mono", Consolas, monospace; font-size: 11px; font-weight: 400; font-variant-numeric: tabular-nums; }
+    .toc-sub { padding-left: 36px; font-size: 11.5px; color: var(--secondary); }
+    .toc-depth-3 { padding-left: 51px; font-size: 10.5px; color: var(--muted); }
+    .spec-section { break-before: page; }
+    .section-meta { display: flex; justify-content: space-between; gap: 18px; padding-bottom: 13px; border-bottom: 2px solid var(--accent); color: var(--accent); font-size: 9px; line-height: 1.5; letter-spacing: 1px; text-transform: uppercase; break-after: avoid; }
+    .section-meta span:last-child { color: var(--muted); letter-spacing: 0; text-transform: none; text-align: right; overflow-wrap: anywhere; }
+    @media screen {
+      body { max-width: 850px; margin: 36px auto; padding: 55px 65px; box-shadow: 0 0 0 1px var(--rule); }
+      html { background: var(--canvas); }
+      .cover-page { height: 890px; }
+      .toc-section, .spec-section { margin-top: 80px; }
+      [id] { scroll-margin-top: 30px; }
+    }
+    @media screen and (max-width: 600px) {
+      body { margin: 0; padding: 28px 22px; box-shadow: none; }
+      .cover-page { height: auto; padding-bottom: 30px; }
+      .cover-title { font-size: 50px; }
+      .cover-edition { gap: 20px; }
+      .cover-meta { position: static; margin-top: 24px; flex-wrap: wrap; gap: 20px; }
+      .cover-meta .meta-note { margin-left: 0; max-width: none; }
+      .cover-illustration { height: auto; }
+      .section-meta { flex-direction: column; gap: 4px; }
+      .section-meta span:last-child { text-align: left; }
+      table { font-size: 10px; }
+      th, td { padding: 6px 4px; }
+      .toc-sub { padding-left: 18px; }
+      .toc-depth-3 { padding-left: 30px; }
+    }
+    
+      .signal-mast { display: flex; justify-content: space-between; align-items: start; border-top: 5px solid var(--paper); padding-top: 15px; }
+      .signal-mast strong { font-size: 27px; letter-spacing: -1.5px; line-height: 1; }
+      .signal-mast > span { font-size: 9px; line-height: 1.4; font-weight: 700; letter-spacing: 1px; }
+      .signal-dot { color: var(--accent); font-size: 14px; margin-left: 10px; vertical-align: top; }
+      .signal-art { margin-top: 28px; height: 335px; display: flex; align-items: center; justify-content: space-between; background: #e64b32; color: #191a19; padding: 22px 28px; }
+      .signal-wordmark { font-size: 155px; font-weight: 900; letter-spacing: -13px; line-height: .85; }
+      .signal-wordmark span { font-size: 95px; vertical-align: top; letter-spacing: -10px; }
+      .signal-art svg { width: 200px; flex-shrink: 1; min-width: 0; height: 100%; }
+      .signal-kicker { display: flex; justify-content: space-between; gap: 20px; font-size: 8px; font-weight: 700; letter-spacing: 1px; margin: 16px 0 32px; }
+      .signal-title { font-size: 68px; font-weight: 800; line-height: .96; letter-spacing: -4px; margin: 0 0 25px; }
+      .signal-title span { color: var(--accent); }
+      .signal-deck { font-size: 15px; line-height: 1.4; }
+      .signal-cover .cover-meta { border-top: 2px solid var(--paper); }
+      .toc-title { font-family: Arial, Helvetica, sans-serif; font-size: 68px; font-weight: 800; letter-spacing: -4px; line-height: 1; }
+      .toc-column-labels { border-bottom: 3px solid var(--paper); }
+      .toc-chapter { border-top: 2px solid var(--paper); padding-top: 13px; font-weight: 700; }
+      .toc-number { font-size: 19px; font-weight: 800; letter-spacing: -1px; }
+      .toc-page { font-weight: 700; }
+      .section-meta { border-bottom: 4px solid var(--paper); color: var(--paper); font-weight: 700; }
+      .spec-section h1 { font-size: 36px; font-weight: 800; line-height: 1.12; letter-spacing: -1.5px; }
+      .spec-section h2 { border-top: 2px solid var(--paper); font-size: 21px; }
+      th { border-top: 2px solid var(--paper); }
+      @media screen and (max-width: 600px) {
+        .signal-art { height: 245px; padding: 18px; }
+        .signal-wordmark { font-size: 105px; letter-spacing: -9px; }
+        .signal-wordmark span { font-size: 65px; }
+        .signal-art svg { width: 95px; }
+        .signal-title { font-size: 43px; letter-spacing: -2px; }
+        .signal-kicker { font-size: 7px; gap: 10px; }
+      }
+    
+.signal-art { padding: 0; }
+.signal-art svg { width: 100%; min-width: 0; height: 100%; }
+@media screen and (max-width: 600px) {
+  .signal-art { padding: 0; height: auto; aspect-ratio: 652 / 330; }
+  .signal-art svg { width: 100%; }
+}
+  </style>
+</head>
+<body class="markdown-body" data-design="signal">
+  <section class="cover-page signal-cover" aria-label="Cover">
+        <div class="signal-mast"><strong>TOD–DL<span class="signal-dot">●</span></strong><span>TOR ONION<br>DUMP DOWNLOADER</span></div>
+        <div class="signal-art">
+          <svg viewBox="48 126 652 330" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            
+  <title id="title">TOD-DL — Acquire. Preserve. Verify.</title>
+  <desc id="desc">A warm paper background, bold black typography, and a
+    vermilion panel use the Signal specification cover design. Three open frames
+    and a heavy diagonal arrow connect native acquisition, durable recovery,
+    and signed provenance.</desc>
+  <rect width="1200" height="580" fill="#f2f0e9"></rect>
+  <g fill="#191a19" font-family="Arial, Helvetica, sans-serif">
+    <path d="M48 48h1104" stroke="#191a19" stroke-width="6"></path>
+    <text x="48" y="92" font-size="32" font-weight="800" letter-spacing="-1.5">TOD–DL</text>
+    <circle cx="179" cy="70" r="4" fill="#b52c18"></circle>
+    <g font-size="11" font-weight="700" letter-spacing="1.4">
+      <text x="1152" y="75" text-anchor="end">TOR ONION</text>
+      <text x="1152" y="92" text-anchor="end">DUMP DOWNLOADER</text>
+    </g>
+    <rect x="48" y="126" width="652" height="330" fill="#e64b32"></rect>
+    <g font-size="174" font-weight="900" letter-spacing="-13">
+      <text x="76" y="279">TOD</text>
+      <text x="76" y="422">DL</text>
+    </g>
+    <g font-size="8" font-weight="700" letter-spacing=".8">
+      <text x="472" y="146">TOD–DL / CAPTURE MARK</text>
+      <text x="676" y="146" text-anchor="end" aria-hidden="true">↘</text>
+    </g>
+    <path d="M472 154h204M472 411h204" stroke="#191a19" stroke-width=".7"></path>
+    <g font-size="7.5" font-weight="700" letter-spacing=".65">
+      <text x="76" y="437">NATIVE ACQUISITION.</text>
+      <text x="76" y="449">SIGNED PROVENANCE.</text>
+      <text x="472" y="434">ACQUIRE / PRESERVE / VERIFY</text>
+    </g>
+    <!-- Canonical capture-mark geometry; embed unchanged in offline exports. -->
+    <g id="capture-mark" transform="translate(436 165) scale(.58)" color="#191a19">
+      <g fill="none" stroke="currentColor" stroke-width="1" opacity=".2" aria-hidden="true">
+        <path d="M40 66h320M40 334h320M66 40v320M334 40v320"></path>
+        <path d="M32 32h12m-6-6v12M356 32h12m-6-6v12
+          M32 368h12m-6-6v12M356 368h12m-6-6v12"></path>
+      </g>
+      <g fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter">
+        <path stroke-width="24" d="M294 66H66V294H112"></path>
+        <path stroke-width="18" d="M254 110H110V254H132"></path>
+        <path stroke-width="12" d="M214 150H150V214"></path>
+        <path stroke-width="28" stroke-linecap="butt" d="M202 202L320 320M248 320H320V248"></path>
+      </g>
+    </g>
+    <g font-size="65" font-weight="800" letter-spacing="-3.5">
+      <text x="752" y="220">Acquire.</text>
+      <text x="752" y="291">Preserve.</text>
+      <text x="752" y="362">Verify<tspan fill="#b52c18">.</tspan></text>
+    </g>
+    <text x="754" y="420" font-size="17">A record of the acquisition.</text>
+    <path d="M48 495h1104" stroke="#191a19" stroke-width="2"></path>
+    <g font-size="11" font-weight="700" letter-spacing="1.3">
+      <text x="48" y="531">NATIVE ACQUISITION</text>
+      <text x="460" y="531">DURABLE RECOVERY</text>
+      <text x="1152" y="531" text-anchor="end">SIGNED PROVENANCE</text>
+    </g>
+    <text x="48" y="552" font-size="12" fill="#585952">
+      Bounded input. Protected resume. Independent verification.
+    </text>
+  </g>
+
+          </svg>
+        </div>
+        <div class="signal-kicker"><span>SYSTEM REFERENCE</span><span>DESIGN / REQUIREMENTS / VERIFICATION</span></div>
+        <h1 class="signal-title">Technical<br>specifications<span>.</span></h1>
+        <p class="signal-deck">A system for acquiring data.<br>An architecture for preserving evidence.</p>
+        <dl class="cover-meta">
+    <div><dt>Published / UTC</dt><dd>2026-10-02</dd></div>
+    <div><dt>Collection</dt><dd>5 specifications</dd></div>
+    <div class="meta-note"><dt>Implementation</dt><dd>Status is recorded in each specification.</dd></div>
+  </dl>
+      </section>
+  <nav class="toc-section" aria-label="Table of contents">
+    <div class="eyebrow">The collection</div>
+    <h1 class="toc-title">Contents</h1>
+    <p class="toc-intro">Architecture, requirements, and acceptance criteria.<br>Select a section to navigate. Numbers refer to pages in the companion PDF.</p>
+    <div class="toc-column-labels"><span>Specification / section</span><span>Page</span></div>
+    <div class="toc-group">
+      
+    <a href="#spec-1" class="toc-row toc-chapter">
+      <span class="toc-number">01</span>
+      <span class="toc-label">Specification: acquisition context and custody references</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-1" aria-label="PDF page 4">4</span>
+    </a>
+      
+    <a href="#spec-1-outcome-and-boundaries" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Outcome and boundaries</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-1-outcome-and-boundaries" aria-label="PDF page 4">4</span>
+    </a>
+    <a href="#spec-1-session-artifact-and-binding" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Session artifact and binding</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-1-session-artifact-and-binding" aria-label="PDF page 4">4</span>
+    </a>
+    <a href="#spec-1-context-declaration-command-contract" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Context declaration command contract</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-1-context-declaration-command-contract" aria-label="PDF page 5">5</span>
+    </a>
+    <a href="#spec-1-tool-and-environment-fields" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Tool and environment fields</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-1-tool-and-environment-fields" aria-label="PDF page 6">6</span>
+    </a>
+    <a href="#spec-1-validation-report-json-contract" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Validation report JSON contract</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-1-validation-report-json-contract" aria-label="PDF page 7">7</span>
+    </a>
+    <a href="#spec-1-custody-metadata" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Custody metadata</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-1-custody-metadata" aria-label="PDF page 9">9</span>
+    </a>
+    <a href="#spec-1-external-custody-attestation" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">External custody attestation</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-1-external-custody-attestation" aria-label="PDF page 10">10</span>
+    </a>
+    <a href="#spec-1-acceptance" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Acceptance</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-1-acceptance" aria-label="PDF page 10">10</span>
+    </a>
+    </div><div class="toc-group">
+      
+    <a href="#spec-2" class="toc-row toc-chapter">
+      <span class="toc-number">02</span>
+      <span class="toc-label">Specification: acquisition evaluation infrastructure</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-2" aria-label="PDF page 12">12</span>
+    </a>
+      
+    <a href="#spec-2-outcome-and-scope" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Outcome and scope</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-2-outcome-and-scope" aria-label="PDF page 13">13</span>
+    </a>
+    <a href="#spec-2-1-streaming-8-gib-fixture-pass-for-e02" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">1. Streaming 8 GiB fixture pass (for E02)</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-2-1-streaming-8-gib-fixture-pass-for-e02" aria-label="PDF page 13">13</span>
+    </a>
+    <a href="#spec-2-2-process-kill-injection-harness-for-e05" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">2. Process-kill injection harness (for E05)</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-2-2-process-kill-injection-harness-for-e05" aria-label="PDF page 14">14</span>
+    </a>
+    <a href="#spec-2-3-controller-failpoints-for-e06" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">3. Controller failpoints (for E06)</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-2-3-controller-failpoints-for-e06" aria-label="PDF page 15">15</span>
+    </a>
+    <a href="#spec-2-4-one-million-row-queue-generator-and-resource-sampler-for-e10" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">4. One-million-row queue generator and resource sampler (for E10)</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-2-4-one-million-row-queue-generator-and-resource-sampler-for-e10" aria-label="PDF page 17">17</span>
+    </a>
+    <a href="#spec-2-5-concurrency-timing-assertions-for-e13" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">5. Concurrency-timing assertions (for E13)</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-2-5-concurrency-timing-assertions-for-e13" aria-label="PDF page 18">18</span>
+    </a>
+    <a href="#spec-2-6-five-item-scoped-run-assertion-for-e11" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">6. Five-item scoped run assertion (for E11)</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-2-6-five-item-scoped-run-assertion-for-e11" aria-label="PDF page 18">18</span>
+    </a>
+    <a href="#spec-2-deliverables" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Deliverables</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-2-deliverables" aria-label="PDF page 19">19</span>
+    </a>
+    <a href="#spec-2-next-steps" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Next steps</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-2-next-steps" aria-label="PDF page 20">20</span>
+    </a>
+    </div><div class="toc-group">
+      
+    <a href="#spec-3" class="toc-row toc-chapter">
+      <span class="toc-number">03</span>
+      <span class="toc-label">Specification: acquisition fault-recovery tests</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-3" aria-label="PDF page 21">21</span>
+    </a>
+      
+    <a href="#spec-3-test-boundary" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Test boundary</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-3-test-boundary" aria-label="PDF page 21">21</span>
+    </a>
+    <a href="#spec-3-required-recovery-cases" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Required recovery cases</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-3-required-recovery-cases" aria-label="PDF page 21">21</span>
+    </a>
+    <a href="#spec-3-transfer-and-scheduler-cases" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Transfer and scheduler cases</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-3-transfer-and-scheduler-cases" aria-label="PDF page 22">22</span>
+    </a>
+    <a href="#spec-3-assertions-and-artifacts" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Assertions and artifacts</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-3-assertions-and-artifacts" aria-label="PDF page 22">22</span>
+    </a>
+    <a href="#spec-3-acceptance-criteria" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Acceptance criteria</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-3-acceptance-criteria" aria-label="PDF page 23">23</span>
+    </a>
+    </div><div class="toc-group">
+      
+    <a href="#spec-4" class="toc-row toc-chapter">
+      <span class="toc-number">04</span>
+      <span class="toc-label">Specification: multi-route acquisition</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-4" aria-label="PDF page 24">24</span>
+    </a>
+      
+    <a href="#spec-4-outcome-and-scope" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Outcome and scope</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-4-outcome-and-scope" aria-label="PDF page 24">24</span>
+    </a>
+    <a href="#spec-4-route-resolution" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Route resolution</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-4-route-resolution" aria-label="PDF page 24">24</span>
+    </a>
+    <a href="#spec-4-engine-integration-points" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Engine integration points</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-4-engine-integration-points" aria-label="PDF page 24">24</span>
+    </a>
+    <a href="#spec-4-schema-and-provenance" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Schema and provenance</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-4-schema-and-provenance" aria-label="PDF page 25">25</span>
+    </a>
+    <a href="#spec-4-mixed-route-startup-gate" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Mixed-route startup gate</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-4-mixed-route-startup-gate" aria-label="PDF page 25">25</span>
+    </a>
+    <a href="#spec-4-acceptance-and-next-steps" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Acceptance and next steps</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-4-acceptance-and-next-steps" aria-label="PDF page 26">26</span>
+    </a>
+    <a href="#spec-4-native-route-selection" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Native route selection</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-4-native-route-selection" aria-label="PDF page 26">26</span>
+    </a>
+    </div><div class="toc-group">
+      
+    <a href="#spec-5" class="toc-row toc-chapter">
+      <span class="toc-number">05</span>
+      <span class="toc-label">Specification: acquisition provenance manifest</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-5" aria-label="PDF page 27">27</span>
+    </a>
+      
+    <a href="#spec-5-purpose-and-boundary" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Purpose and boundary</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-5-purpose-and-boundary" aria-label="PDF page 27">27</span>
+    </a>
+    <a href="#spec-5-record-set" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Record set</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-5-record-set" aria-label="PDF page 27">27</span>
+    </a>
+    <a href="#spec-5-event-format" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Event format</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-5-event-format" aria-label="PDF page 28">28</span>
+    </a>
+    <a href="#spec-5-acquisition-fields" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Acquisition fields</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-5-acquisition-fields" aria-label="PDF page 29">29</span>
+    </a>
+    <a href="#spec-5-summary-and-verification" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Summary and verification</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-5-summary-and-verification" aria-label="PDF page 31">31</span>
+    </a>
+    <a href="#spec-5-acceptance-criteria" class="toc-row toc-sub toc-depth-2">
+      
+      <span class="toc-label">Acceptance criteria</span>
+      <span class="toc-leader" aria-hidden="true"></span>
+      <span class="toc-page" data-page-for="spec-5-acceptance-criteria" aria-label="PDF page 31">31</span>
+    </a>
+    </div>
+  </nav>
+  <main><section id="spec-1" class="spec-section" aria-label="Specification: acquisition context and custody references">
+      <div class="section-meta"><span>Specification 01</span>
+        <span>SPEC-acquisition-context.md</span></div>
+      
+      <h1 id="spec-1-specification-acquisition-context-and-custody-references">Specification: acquisition context and custody references</h1>
+<p>Status: implemented, September 25, 2026. The controller requires and validates
+a format 1 declaration before its first version 2 state write. It retains
+runtime context artifacts, binds them to signed records, and verifies the
+bindings and validation-report byte matches.</p>
+<h2 id="spec-1-outcome-and-boundaries">Outcome and boundaries</h2>
+<p>Bind each acquisition session to its actual tool configuration and declared
+custody context. Apply <a href="SPEC-manifest-v2-evolution.md">v2 evolution</a> and <a href="SPEC-forensic-compliance.md">compliance</a>.
+Preserve the existing separation between a signing key and a human identity.</p>
+<p>The existing <code>tool_descriptor</code> role is an optional opaque run input. It
+cannot establish the environment of a later resumed session. Revised v2
+sessions must use the structured context below. An old tool descriptor can
+remain a declared input, but cannot substitute for a session context.</p>
+<p>Host measurements are collector assertions. Hashing an executable does not
+prove that the host was uncompromised or that those bytes executed. The
+report must state that boundary and name the validation evidence checked.</p>
+<h2 id="spec-1-session-artifact-and-binding">Session artifact and binding</h2>
+<p>Before <code>run_started</code> and source contact, write
+<code>context/&lt;session-id&gt;.json</code> below the run directory. Publish it durably with
+the existing no-overwrite rules. Add required <code>acquisition_context</code> artifact
+references to <code>run_started</code>, its session summary, and its run-index session
+entry. The references must agree and use run-relative paths.</p>
+<p>An index entry for a session without an authenticated <code>run_started</code> has
+<code>acquisition_context: null</code>. Once that event exists, require its reference
+in every later index entry. No completed session can have a null context.</p>
+<p>The artifact contains exactly <code>context_format: 1</code>, <code>run_id</code>, <code>session_id</code>,
+<code>captured_at</code>, <code>components</code>, <code>environment</code>, <code>effective_configuration</code>,
+<code>validation_report</code>, and <code>custody</code>. IDs and timestamps follow v2 types.
+The context has no independent signature; the signed event and index bind
+its exact bytes. The handover must copy it and verify those bindings.</p>
+<p>The controller must regenerate context for every session. It must retain
+each prior context. A crash before the first signed event leaves an orphan
+artifact with no acquisition claim; recovery must not adopt it as a signed
+context for a different session. Existing incomplete-session rules apply.</p>
+<h2 id="spec-1-context-declaration-command-contract">Context declaration command contract</h2>
+<p>Each revised v2 session must receive one operator-owned JSON declaration:</p>
+<pre><code class="language-text">--context-declaration PATH
+</code></pre>
+<p><code>PATH</code> names a regular file that the controller opens without following a
+symbolic link. The controller must validate the declaration before it writes
+state or contacts a source. The controller must not retain, hash, export, or
+reference the declaration file itself. This keeps operator-only paths and any
+restricted handling information outside the acquisition package.</p>
+<p>The declaration is UTF-8 JSON. It contains exactly these keys:</p>
+<pre><code class="language-json">{
+  "context_declaration_format": 1,
+  "components": [
+    {
+      "component_id": "collector-1",
+      "role": "collector",
+      "name": "tod-dl",
+      "version": "2.0.0",
+      "artifact_path": "/secure/operator/tod-dl-source-manifest.json"
+    }
+  ],
+  "redactions": ["aria2_rpc_secret"],
+  "validation_report_path": "/secure/operator/validation-report.json",
+  "validation_evidence_paths": [
+    "/secure/operator/validation-evidence.json"
+  ],
+  "custody": {
+    "case_id": "case-2026-001",
+    "operator_ref": "operator-7",
+    "organization_ref": "unit-3",
+    "role_ref": "collector",
+    "authority_ref": null,
+    "facility_ref": null,
+    "custody_record_ref": "custody-2026-001-r1"
+  }
+}
+</code></pre>
+<p><code>context_declaration_format</code> must equal <code>1</code>. Unknown keys fail validation.
+Each component object has exactly the keys shown above. Its identifier, role,
+name, and version populate the corresponding context component fields.
+<code>artifact_path</code> is an absolute operator input path. The controller must read
+the target as a regular file without following links, copy its exact bytes
+below the session <code>context/</code> tree, and use the resulting artifact reference.
+The component rules in "Tool and environment fields" still apply, including
+the required roles and sorted unique component identifiers.</p>
+<p><code>redactions</code> is a sorted array of unique secret parameter names. It can name
+parameters only; it must not contain a secret value, digest, credential, or
+command line. The controller records these names in the generated effective
+configuration artifact and omits the matching values.</p>
+<p><code>validation_report_path</code> names the one required validation report. Each entry
+in <code>validation_evidence_paths</code> names an additional report input. The
+evidence-path array must contain at least one entry for a matched report. The
+controller reads every path as a regular file without following links, copies
+and hashes each file below <code>context/</code>, and records safe artifact references.
+The generated validation report reference must bind the copied report. A
+declaration can use no duplicate path, including the validation report path.</p>
+<p><code>custody</code> has exactly the fields and value rules in "Custody metadata".
+<code>custody.case_id</code> must equal <code>--case-id</code>. The command must reject a declaration
+without <code>--case-id</code>, or with a different case ID, before any state write.</p>
+<p>The controller captures environment and effective non-secret settings from
+the running session. The declaration does not override those measurements.
+It must reject invalid JSON, unsupported formats, unknown fields, duplicate
+component IDs or paths, unsafe files, unreadable files, and values that break
+the context artifact contract before it creates <code>context/</code> or <code>run_started</code>.
+Repeated component flags are not part of this interface.</p>
+<h2 id="spec-1-tool-and-environment-fields">Tool and environment fields</h2>
+<p><code>components</code> is a nonempty array sorted by ascending ASCII byte order of
+<code>component_id</code>. Each entry has
+exactly <code>component_id</code>, <code>role</code>, <code>name</code>, <code>version</code>, and <code>artifact</code>.
+<code>component_id</code> is an opaque identifier matching <code>[A-Za-z0-9._-]{1,128}</code> and
+cannot equal <code>.</code> or <code>..</code>. <code>name</code> and <code>version</code> are nonempty Unicode scalar
+strings of at most 256 UTF-8 bytes, with no control characters. Role is
+<code>collector</code>, <code>runtime</code>, <code>adapter</code>,
+<code>transfer_engine</code>, <code>tor</code>, <code>routing_wrapper</code>, or <code>dependency</code>.</p>
+<p>Require one collector, runtime, and adapter. Require every transfer engine
+and routing component actually used. Include the installed cryptographic,
+canonicalization, and validation dependencies. <code>artifact</code> refers to a
+retained file or deterministic source-package manifest under the context's
+run-relative <code>context/</code> tree. A source-package manifest lists relative
+paths, byte counts, and SHA-256 values, sorted by path, with no duplicates.
+It must include loaded source modules; a Git commit ID alone is insufficient.</p>
+<p>Capture files from the configured execution paths, not an unrelated version
+command found on <code>PATH</code>. A profile must fail admission if a required
+component cannot be identified, hashed, or matched to validation evidence.
+Deployment procedures must prevent component replacement during a session.
+A detected component change must stop new admission and require a new
+session; it cannot rewrite the existing context.</p>
+<p><code>environment</code> has exactly <code>os_name</code>, <code>os_version</code>, <code>kernel_version</code>,
+<code>architecture</code>, <code>execution_kind</code>, <code>image_digest</code>, <code>host_ref</code>, and <code>clock</code>.
+Execution kind is <code>native</code>, <code>container</code>, or <code>virtual_machine</code>. Image digest
+is a nullable <code>digest_set</code>; it describes an image only when measured.
+<code>host_ref</code> is an opaque identifier. Do not collect raw hostnames, usernames,
+home paths, IP addresses, or a full environment-variable dump.</p>
+<p><code>clock</code> contains <code>source</code>, <code>synchronized</code>, <code>measured_at</code>,
+<code>offset_microseconds</code>, and <code>uncertainty_microseconds</code>. Source is <code>ntp</code>,
+<code>ptp</code>, <code>manual</code>, or <code>unknown</code>. Synchronization is Boolean or null when
+unavailable. Measurement time and numeric fields are nullable. Offset is
+a signed safe integer; uncertainty is nonnegative. Unmeasured values are
+null, never zero. Clock metadata is not external timestamp proof.</p>
+<p><code>effective_configuration</code> is an artifact reference to a canonical object
+containing exactly <code>configuration_format: 1</code>, <code>settings</code>, and <code>redactions</code>.
+Settings is a sorted array of unique <code>{name, value}</code> entries. A registered
+adapter schema defines the permitted settings and their value types.
+Include selection, validation, retry, resume, storage, route, and transport
+settings that affect acquisition. Represent paths through artifact or opaque
+references. Record secret parameter names in <code>redactions</code>; omit their values
+and hashes. Do not retain raw command lines that can contain credentials.</p>
+<p><code>validation_report</code> is a required artifact reference to a retained report
+under <code>context/</code>. Its configuration and component digests must match the
+current session under <a href="SPEC-forensic-compliance.md">compliance</a>. A report reference binds
+the report; it does not independently prove a reviewer performed its tests.</p>
+<h2 id="spec-1-validation-report-json-contract">Validation report JSON contract</h2>
+<p>The declared report is UTF-8 JSON with exactly <code>validation_report_format</code>,
+<code>components</code>, <code>effective_configuration</code>, <code>evidence</code>, <code>fixtures</code>, <code>tests</code>,
+<code>known_limitations</code>, <code>unsupported_transport_features</code>, <code>review_ref</code>, and
+<code>reviewed_at</code>. <code>validation_report_format</code> is the integer <code>1</code>. Reject duplicate
+JSON keys, unknown keys, invalid UTF-8, and integers outside the v2 safe
+integer range. Timestamps use the v2 timestamp type. The report and every
+evidence file contain no restricted text. Before the controller copies or
+hashes either input, it must decode the input as UTF-8 and reject it when the
+input contains restricted text. Evidence files must therefore be UTF-8 text.</p>
+<p>For this contract, restricted text is any configured restricted value, an
+absolute POSIX path, a Windows drive or UNC path, a URI with user info, or a
+line that has an executable token followed by a whitespace-delimited option.
+The active profile supplies the restricted values outside the declaration and
+export. The values must include each known secret, hostname, username, and
+human identity. The controller compares values as exact Unicode scalar
+strings. It scans raw decoded text and, when an input is valid JSON, every
+decoded JSON string value. This rule does not require the controller to infer
+identities.</p>
+<p><code>components</code> is a nonempty array sorted by ascending ASCII byte order of
+<code>component_id</code>, with unique IDs.
+Each entry contains exactly <code>component_id</code>, <code>role</code>, <code>name</code>, <code>version</code>,
+<code>artifact_sha256</code>, and <code>artifact_byte_count</code>. The first four values have the
+same types and rules as context components. The digest is 64 lowercase
+hexadecimal characters. The byte count is a nonnegative safe integer.</p>
+<p><code>effective_configuration</code> contains exactly <code>sha256</code> and <code>byte_count</code>, with
+the same digest and count rules. The digest covers the exact retained bytes
+of the generated configuration artifact. It does not cover the operator
+declaration or a reconstructed settings object.</p>
+<p><code>evidence</code> is an array of objects with exactly <code>sha256</code> and <code>byte_count</code>,
+using the same digest and count rules. Entry <code>i</code> binds the exact bytes of
+<code>validation_evidence_paths[i]</code>, after the controller copies that file.
+The array length must equal the declared evidence-path count and be nonzero.
+The retained path for entry <code>i</code> is
+<code>context/&lt;session-id&gt;/validation-evidence/&lt;i&gt;</code>. The handover must copy each
+file at the same relative path.</p>
+<p><code>fixtures</code> is a nonempty array sorted by ascending ASCII byte order of unique
+<code>fixture_id</code>. Each entry contains
+exactly <code>fixture_id</code>, <code>sha256</code>, and <code>byte_count</code>. The digest and count
+identify the tested fixture bytes. A fixture digest is a report assertion;
+the controller does not fetch or reconstruct fixture bytes to check it. Run
+and handover verification checks fixture IDs and test references only. It
+reports fixture digests as unverified external assertions.</p>
+<p><code>tests</code> is a nonempty array sorted by ascending ASCII byte order of unique
+<code>test_id</code>. Each entry contains
+exactly <code>test_id</code>, <code>status</code>, <code>component_ids</code>, <code>evidence_indices</code>, and
+<code>fixture_ids</code>. Status is <code>pass</code>, <code>fail</code>, or <code>skip</code>. The three reference arrays
+are sorted and unique. Identifier arrays use ascending ASCII byte order.
+Evidence indices use ascending numeric order. <code>component_ids</code> and
+<code>fixture_ids</code> refer to entries in this report. Each evidence index is a
+nonnegative safe integer less than the length of <code>evidence</code>. A passing test
+has at least one component ID, evidence index, and fixture ID. Every component
+and evidence index must occur in at least one passing test.
+Every declared fixture must occur in at least one passing test's <code>fixture_ids</code>.
+Failed and skipped tests remain in the report; a failed test blocks admission.</p>
+<p><code>fixture_id</code>, <code>test_id</code>, and <code>review_ref</code> are opaque identifiers matching
+<code>[A-Za-z0-9._-]{1,128}</code>, excluding <code>.</code> and <code>..</code>. <code>known_limitations</code> is an
+array sorted by ascending ASCII byte order of unique <code>limitation_id</code>. Each
+entry contains exactly
+<code>limitation_id</code> and <code>summary</code>. The ID uses the same opaque-ID rule. Summary is
+a nonempty Unicode scalar string of at most 1,024 UTF-8 bytes. It has no
+control characters, raw absolute paths, command lines, credentials, or human
+identities. Reject a report with a summary that breaks these rules.
+<code>unsupported_transport_features</code> is an array sorted by ascending ASCII byte
+order of unique identifiers using the same opaque-ID rule. An empty array
+states that the report declares none.
+<code>review_ref</code> and <code>reviewed_at</code> identify the claimed review. They do not
+establish reviewer identity or accreditation.</p>
+<p>Before <code>run_started</code> or source contact, the controller must compare the
+report's component count and each component's ID, role, name, version,
+artifact digest, and byte count with the collected session context. It must
+compare the configuration digest and byte count with the generated artifact.
+It must compare every evidence digest and byte count with the copied file at
+the same index. Missing, extra, reordered, malformed, or mismatched entries
+fail admission. A failed test or a component without a passing test also
+fails admission. Skips and unsupported features remain explicit for later
+profile assessment; an exact match alone does not establish validation
+sufficiency or legal compliance.</p>
+<p>Run and handover verification must repeat the component, configuration, and
+evidence checks against retained bytes. It must repeat structural fixture and
+test checks: object keys and types, array order and uniqueness, references,
+index bounds, passing coverage, and failed-test rejection. It must report a
+failed match separately from a broken signed reference. Neither check executes
+tests or proves that a reviewer performed them.</p>
+<h2 id="spec-1-custody-metadata">Custody metadata</h2>
+<p><code>custody</code> contains exactly <code>case_id</code>, <code>operator_ref</code>, <code>organization_ref</code>,
+<code>role_ref</code>, <code>authority_ref</code>, <code>facility_ref</code>, and <code>custody_record_ref</code>.
+Case ID must match both registries. The other values use opaque identifiers
+matching <code>[A-Za-z0-9._-]{1,128}</code>, excluding <code>.</code> and <code>..</code>.
+<code>authority_ref</code> and <code>facility_ref</code> are nullable; all other values are required.
+A profile requiring legal authority must reject a null authority reference.</p>
+<p>These identifiers link to a restricted human custody record outside the
+run and handover export. That record holds actual identities, authority
+documents, evidence labels, transfer purpose, and transfer notes. An
+authority reference records a claim; the downloader cannot authorize access.
+Facility identity and route observations must not imply source geolocation.</p>
+<p>Each human evidence label must map to the run ID and immutable item ID.
+Labels do not replace item IDs or determine output paths. Correct a label
+with a new custody-record revision; never change the signed acquisition.
+Record unavailable identities or authority information as explicit omissions
+in the external record. A profile requiring them must fail assessment.</p>
+<h2 id="spec-1-external-custody-attestation">External custody attestation</h2>
+<p>After handover, a separate signed attestation can bind a specific human
+custody-record revision to the released handover. Store it outside the
+export, like the existing recipient receipt. Do not change that receipt's
+acceptance semantics or rewrite the handover to insert the attestation.</p>
+<p>The attestation contains exactly <code>record_type: custody_attestation</code>,
+<code>attestation_format: 1</code>, <code>run_id</code>, <code>handover_sha256</code>, <code>custody_record_ref</code>,
+<code>custody_revision_sha256</code>, <code>signer_ref</code>, <code>recorded_at</code>,
+<code>signing_key_fingerprint</code>, and <code>signature</code>. Use the v2 JCS signature rule.
+The custody revision digest binds the exact restricted document bytes.
+The signer reference is opaque; a key alone does not establish its identity.</p>
+<p>A future verifier must accept explicit paths for the attestation, restricted
+revision, and externally trusted signer key when checking this linkage.
+It must verify signature, run and handover identity, record reference, and
+revision digest. It must never discover private records or fetch them.
+Missing private material gives <code>indeterminate</code> for the requested linkage
+check. Public handover integrity remains independently assessable.</p>
+<p>Human identity and authority validation remain organizational procedures.
+Machine verification must report <code>signed_assertion</code>, the trust source, and
+whether the document linkage passed. It must not report verified legal
+authority solely because an attestation signature passed.</p>
+<h2 id="spec-1-acceptance">Acceptance</h2>
+<p>These gates test both accurate bindings and privacy boundaries.</p>
+<ul>
+<li>AC01: Two sessions with different environments retain distinct contexts;
+swapping either artifact fails signed-reference verification.</li>
+<li>AC02: A changed component or effective setting fails the validation match
+before source contact; a Git ID cannot hide modified source bytes.</li>
+<li>AC03: Secret-bearing flags, hostnames, and usernames never enter context,
+logs, configuration artifacts, or generated fixture reports.</li>
+<li>AC04: Unknown clock measurements remain null and cannot imply trusted time.</li>
+<li>AC05: Context case mismatch, duplicate component IDs, unknown fields, and
+unsafe paths fail without reading outside the declared artifact root.</li>
+<li>AC06: A custody attestation for another handover or document revision
+fails; missing restricted records do not become verified identity claims.</li>
+<li>AC07: Crash recovery preserves signed contexts and never attributes an
+orphan context to a later acquisition session.</li>
+<li>AC08: Malformed reports, changed component or configuration bytes, missing
+evidence, and failed tests block admission before source contact.</li>
+<li>AC09: Duplicate and unknown report keys, invalid references, incorrect
+ordering, unsafe text, and a fixture without a passing test block admission.</li>
+<li>AC10: Run and handover verification separately report a retained-byte match
+failure and a broken signed reference.</li>
+</ul>
+
+    </section>
+<section id="spec-2" class="spec-section" aria-label="Specification: acquisition evaluation infrastructure">
+      <div class="section-meta"><span>Specification 02</span>
+        <span>SPEC-acquisition-evaluation-infrastructure.md</span></div>
+      
+      <h1 id="spec-2-specification-acquisition-evaluation-infrastructure">Specification: acquisition evaluation infrastructure</h1>
+<p>Status: implemented, September 18, 2026. All six pieces are built. Per
+<a href="reports/acquisition-tool-evaluation-2026-09-18b.md">the second evaluation report</a>,
+E11 had no harness at that report's writing; Section 6's harness
+(<code>e11_five_item_scoped_run</code>, <code>src/evaluation/run_acquisition_evaluation.py</code>) closes that
+gap, wired into <code>main()</code>, with a corresponding unit test for its new
+<code>_read_run_items</code> helper in <code>tests/test_acquisition_evaluation.py</code>. Per this
+specification's scope, E11 has not been run yet; running it and recording a
+result belongs to a later evaluation report. The five other built pieces: the
+streaming 8 GiB fixture pass for E02 (<code>Fixture</code>, <code>FixtureServer</code>, and
+<code>e02_large_file_interrupted_resume</code>, <code>src/evaluation/run_acquisition_evaluation.py</code>);
+the kill-injection harness for E05 (<code>start_downloader</code>,
+<code>src/evaluation/aria2_evaluation_adapter.py</code>; <code>process_tree_pids</code>, <code>find_engine_pid</code>,
+<code>wait_for_bytes_written</code>, <code>src/evaluation/acquisition_evaluation.py</code>;
+<code>e05_kill_injection</code>); the three named controller failpoints for E06
+(<code>hit_failpoint</code>, <code>FAILPOINTS</code>, <code>src/tod_dl.py</code>, gated by <code>TOD_DL_FAILPOINT</code>;
+<code>FAILPOINTS</code> now holds three more names, described in section 3)
+plus the <code>reconcile_promotions()</code> extension for failpoint (a), already built
+before this specification (<code>Downloader.reconcile_promotions()</code> and
+<code>is_promotable_final_path()</code>, <code>src/tod_dl.py</code>); the one-million-row queue
+generator and resource sampler for E10 (<code>generate_synthetic_queue_rows</code>,
+<code>ResourceSampler</code>, <code>src/evaluation/acquisition_evaluation.py</code>;
+<code>e10_million_row_admission_and_resources</code>); and the concurrency-timing
+assertions for E13 (<code>e13_concurrency_timing</code>), reading admission and
+completion timestamps from <code>download_transitions</code> via <code>read_transitions</code>
+(<code>src/evaluation/aria2_evaluation_adapter.py</code>). Per this specification's scope, none of
+E02, E05, E06, E10, or E13 was run as part of this work.</p>
+<p>A later session wired E05, E06, E10, and E13 into
+<code>src/evaluation/run_acquisition_evaluation.py</code>'s <code>main()</code> and ran them, per
+<code>specs/reports/acquisition-tool-evaluation-2026-09-18b.md</code>: E10 and E13
+pass; E05 and E06 fail on two real, confirmed controller gaps (a
+<code>scope_run()</code>/<code>reconcile_promotions()</code> ordering bug, plus a related stale
+<code>.aria2</code>-control-file false-failure in <code>Downloader.transfer()</code>), not
+infrastructure gaps — see that report's "Remaining gaps" section. E02 did
+not run to completion: its fixture generator sustained only ~3.4 MB/s in a
+partial run, too slow to finish within the 600s per-attempt time limit,
+confirming Section 1's unmeasured open question was a real cost, not a
+false worry. Separately, Section 1's <code>is_incomplete_body_failure()</code> gap is
+fixed outside this specification's scope: <code>Downloader.transfer()</code>
+(<code>src/tod_dl.py</code>) now retries a first "Got EOF from the server" failure
+through the normal <code>retry_wait</code> path instead of routing it straight to
+<code>review_required</code>, so a resumable mid-transfer cut can complete via
+<code>--continue=true</code> on the next attempt; it gives up to <code>review_required</code>
+only when a retry's incomplete-body failure shows no growth in staged
+bytes, which is the signal for a genuinely short body. That fix is
+confirmed working for E02's own requirement (resumed past the 256 MiB
+interrupt point in the partial run above) independent of the generator's
+throughput problem.</p>
+<p>A later session measured and fixed the generator throughput problem.
+<code>DeterministicBytes._block()</code> (<code>src/evaluation/acquisition_evaluation.py</code>) hashed a
+64-byte <code>blake2b</code> digest per block, which needed 134 million hash calls to
+generate an 8 GiB fixture (~3.4 MB/s); separately, <code>Fixture.generator</code>
+returns a new <code>DeterministicBytes</code> instance on every access, so no
+per-instance block cache could ever hit. The fix switches to a <code>shake_256</code>
+digest producing 1 MiB blocks (8192 calls for an 8 GiB fixture) through a
+module-level <code>lru_cache</code> keyed on <code>(seed, block_index)</code>, which caches across
+<code>Fixture.generator</code> accesses. Measured: an 8 GiB fixture's <code>sha256()</code> pass
+now completes in ~16 s (&gt;500 MB/s), well inside the 600 s per-attempt time
+limit. E02 has not yet been run to completion with the fixed generator.</p>
+<h2 id="spec-2-outcome-and-scope">Outcome and scope</h2>
+<p>Define the test infrastructure that
+<a href="SPEC-acquisition-tool-evaluation.md">the acquisition tool evaluation specification</a>
+requires to run E02, E05, E06, E10, E11, and E13. This specification does not
+change any required result in that specification's scenario table. It does
+not evaluate a candidate and does not select a configuration. Build each
+piece as an addition to the existing harness (<code>src/evaluation/acquisition_evaluation.py</code>)
+and the existing adapter and runner (<code>src/evaluation/aria2_evaluation_adapter.py</code>,
+<code>src/evaluation/run_acquisition_evaluation.py</code>), not as a separate harness.</p>
+<p>Implement the six pieces in the order listed below. Each piece stands alone:
+a later piece must not depend on an earlier piece beyond shared harness code
+that already exists.</p>
+<h2 id="spec-2-1-streaming-8-gib-fixture-pass-for-e02">1. Streaming 8 GiB fixture pass (for E02)</h2>
+<p>Requirement: "Generate fixture bytes from a documented seekable deterministic
+generator, so the server can serve an 8 GiB representation without
+materializing it first. The harness must calculate the expected digest with
+the same generator in a separate streaming pass." (parent specification,
+"Evaluation fixtures.")</p>
+<ul>
+<li>Add an 8 GiB fixture entry to the manifest generator, built from the
+existing deterministic generator (already used for smaller fixtures) run to
+a length of <code>8 * 1024**3</code> bytes. Confirm the existing generator is seekable
+at arbitrary byte offsets before reusing it; if it is not, that gap belongs
+in this section, not a new generator.</li>
+<li>Compute the expected SHA-256 in a second, independent streaming pass over
+the same generator and seed, never by hashing the served bytes. Record
+generator name, seed, length, and digest in the fixture manifest.</li>
+<li>Serve the fixture without materializing it: the fixture server's request
+handler must produce each response chunk from the generator at the
+requested byte offset, not from a file written to disk first.</li>
+<li>Interrupt the transfer after exactly 256 MiB, per E02's requirement, using
+the existing scripted-response mechanism (connection termination at a byte
+count). Assert on resume: a nonzero <code>Range</code> request, a final digest that
+matches the manifest, and no full restart from byte 0.</li>
+<li>Run this fixture once per viable candidate, per the parent specification's
+"Run the full large-file fixture once per viable candidate" instruction.
+Do not add it to the repeated failure-boundary test set.</li>
+</ul>
+<p>Open question: confirm the current generator's per-chunk cost is low enough
+that an 8 GiB streamed response completes in a bounded time on the evaluation
+machine. Measure this during implementation; do not assume it.</p>
+<p>Resolved: <code>terminate_after_bytes</code> (the scripted-response mechanism named
+above) closes the connection before the response reaches its advertised
+<code>Content-Length</code>, which aria2 reports as <code>GOT EOF FROM THE SERVER</code> — the same
+error text <code>is_incomplete_body_failure()</code> (<code>src/tod_dl.py</code>) matches to route
+a nonzero-size staging file to <code>review_required</code>, not <code>retry_wait</code>, since the
+E08/E12 fix in commit <code>a6ee1d9</code>. Commit <code>a6ee1d9</code>'s own docstring for
+<code>is_incomplete_body_failure()</code> confirms aria2 gives no distinguishable
+signal: it reports <code>errorCode=1</code> for this case, the same generic code it
+uses for unrelated failures, which is why that fix matches on message text
+rather than the code. aria2 has no way to tell a genuinely short body (the
+server will always send fewer bytes than <code>Content-Length</code>, which no retry
+fixes) apart from a connection cut mid-transfer that a <code>--continue=true</code>
+retry could resume. A transfer interrupted at 256 MiB therefore takes the
+<code>review_required</code> route under current controller code, which forecloses
+resume before a second <code>run_aria2()</code> attempt can ever try it, and fails
+E02's "resume, no full restart" requirement. This is a controller-side gap:
+<code>is_incomplete_body_failure()</code> cannot become more precise using only aria2's
+output, so the fix (if any) must live in what the controller does with a
+nonzero-size, <code>GOT EOF</code>-classified staging file, not in a more precise
+error match. Closing that gap is outside this specification's six pieces,
+per the scope line above ("This specification does not change any required
+result"); E02 cannot pass until a decision is made and implemented
+separately. Do not implement any change to <code>is_incomplete_body_failure()</code> or
+its caller as part of this specification.</p>
+<h2 id="spec-2-2-process-kill-injection-harness-for-e05">2. Process-kill injection harness (for E05)</h2>
+<p>Requirement: "Kill the engine, controller, and both during transfer. Restart
+without losing jobs, concurrent duplicate writers, or premature promotion."
+(parent specification, scenario table.)</p>
+<ul>
+<li>Add a kill-injection mode driven from <code>src/evaluation/run_acquisition_evaluation.py</code>.
+The existing invocation, <code>run_downloader()</code> in
+<code>src/evaluation/aria2_evaluation_adapter.py</code>, uses <code>subprocess.run(...)</code>, which blocks
+until the controller exits and exposes no PID or live handle while it
+runs. Add a separate, <code>Popen</code>-based invocation function alongside
+<code>run_downloader()</code> in <code>src/evaluation/aria2_evaluation_adapter.py</code> — the module whose
+stated purpose is driving the controller subprocess — that starts the same
+controller command line and returns a live handle instead of a completed
+result. Do not reuse <code>run_downloader()</code> unmodified for this mode.</li>
+<li>For the engine sub-case, identify the aria2 process to signal by walking
+the process tree rooted at the controller's PID, the same approach Section
+4 uses for RSS sampling: the controller spawns <code>torsocks -i aria2c</code>
+(<code>Downloader.run_aria2()</code>, <code>src/tod_dl.py</code>), and the actual <code>aria2c</code>
+process may be a direct child or a grandchild depending on whether
+<code>torsocks</code> exec-replaces itself on the evaluation machine. Confirm which
+during implementation before selecting a PID to kill; signaling the wrong
+process would leave the real writer running and invalidate the sub-case's
+"concurrent duplicate writer" assertion.</li>
+<li>Trigger the kill by byte-transferred count, measured by polling the size of
+the staging file the controller is writing to on disk (the destination and
+state directories are already known to the harness) rather than by
+wall-clock delay, so the kill point is reproducible across runs. The
+fixture server's event log cannot serve as the trigger: it records one
+event per request, written only in the request's <code>finally</code> block after the
+request completes or its connection is torn down (<code>FixtureServer._record</code>,
+<code>src/evaluation/acquisition_evaluation.py</code>), so it has no entry to observe during an
+in-progress transfer.</li>
+<li>After the kill, restart the controller against the same isolated
+destination and state directories used before the kill, and let it run to
+completion or its normal terminal state.</li>
+<li>Assert, from durable state and the final file: exactly one final file per
+item, and no promotion of a partial transfer that was in flight at kill
+time. The reliable acquisition specification does not enumerate valid
+partial-and-final coexistence states; the controller's own finalization
+path (<code>Downloader.transfer()</code>, <code>src/tod_dl.py</code>) defines the only
+legitimate coexistence window instead: the final file is created by
+<code>os.link(staging, target)</code> while <code>status="promoting"</code>, and staging is
+unlinked only after the following <code>status="complete"</code> transition commits.
+Assert that any staging-and-final coexistence observed after a kill and
+restart matches this window (a <code>promoting</code> or <code>complete</code> row for that URL
+at the moment of coexistence) and not a state outside it.</li>
+<li>Run three sub-cases: engine killed, controller killed, both killed
+(simultaneously, within the same event-log tick). Record which sub-case
+produced which durable state.</li>
+</ul>
+<p>Open question: decide whether "both during transfer" means simultaneous
+<code>SIGKILL</code> to both processes or a kill to one shortly followed by a kill to
+the other before either can react. Pick simultaneous first, since it is the
+harder case; add the staggered case only if the evaluation report calls it
+out as a distinct gap.</p>
+<h2 id="spec-2-3-controller-failpoints-for-e06">3. Controller failpoints (for E06)</h2>
+<p>Requirement: "Test-only controller failpoints must stop immediately after
+durable validation intent, exclusive final-file creation, and
+completion-record commit. E06 then has unambiguous process boundaries."
+(parent specification, "Evaluation fixtures.")</p>
+<ul>
+<li>Add three named, test-only failpoints to the controller's finalization
+path (<code>Downloader.transfer()</code>, <code>src/tod_dl.py</code>), each stopping the process
+immediately after one step: (a) the durable record of validation intent —
+the <code>status="promoting"</code> transition, which is written only after hashing
+completes and already carries the computed digest, immediately before the
+final file is created; (b) exclusive final-file creation (after
+<code>os.link(staging, target)</code> succeeds, before the completion record
+commits); and (c) the completion-record commit itself — the first
+<code>status="complete"</code> transition, which records <code>bytes</code> and <code>sha256</code> (after
+that database write, before the staging file is unlinked and the second,
+cleanup <code>status="complete"</code> transition that follows it).</li>
+<li>Gate each failpoint behind an environment variable or CLI flag that only
+the evaluation runner sets, never a flag reachable in normal operation.
+Name the three failpoints distinctly (for example,
+<code>TOD_DL_FAILPOINT=post_validation_intent</code>,
+<code>post_final_file_creation</code>, <code>post_completion_commit</code>) so a single run
+exercises exactly one boundary.</li>
+<li>E06 needs exactly these three. <code>FAILPOINTS</code> also holds <code>post_staging_unlink</code>,
+<code>pre_provenance_close</code>, and <code>post_provenance_close</code>. They stop the process
+after the staging unlink and around the provenance close at shutdown, and
+<code>FailpointRecoveryTests</code> (<code>tests/test_tod_dl.py</code>) covers each. E06 does not
+use them.</li>
+<li>After each failpoint fires and the process exits, restart the controller
+and assert idempotent reconciliation, scoped per failpoint since two
+different functions in <code>src/tod_dl.py</code> handle the three landing states,
+not one: failpoints (a) and (b) leave the row at <code>status='promoting'</code> and
+are picked up by <code>reconcile_promotions()</code>; failpoint (c) leaves the row
+already at <code>status='complete'</code> with <code>cleanup_completed_at</code> still unset
+(the first <code>complete</code> transition, line 1905, lands before the kill point)
+and is picked up by the separate <code>cleanup_completed_staging()</code> function,
+which finishes the staging unlink and the second <code>complete</code> transition.
+For failpoint (b), assert the final file is preserved, its recorded hash
+matches, and no duplicate completion record or duplicate final file
+results, per <code>reconcile_promotions()</code>'s existing handling. For failpoint
+(c), assert the same outcome, per <code>cleanup_completed_staging()</code>'s existing
+handling. For failpoint (a), where the durable <code>promoting</code> record exists
+but the final file was never created, extend <code>reconcile_promotions()</code> (see
+the resolved open question below) to recreate <code>os.link(staging, target)</code>
+and complete automatically; assert that outcome, not <code>review_required</code>.</li>
+<li>Read the existing controller finalization code (<code>src/tod_dl.py</code>) before
+placing the failpoints; place them at the exact three steps the parent
+specification names, not at steps that only approximate them.</li>
+</ul>
+<p>Resolved: <code>reconcile_promotions()</code> has no code path that recognizes
+"digest already durably recorded in a <code>promoting</code> row, staging intact,
+target simply not yet created" — failpoint (a)'s exact landing state — and
+instead falls into the same <code>review_required</code> branch used for a genuinely
+corrupted or mismatched promotion. The fall-through happens at the
+<code>target_matches</code> check: <code>is_safe_final_path(target)</code> calls
+<code>target.lstat()</code>, catches the resulting <code>FileNotFoundError</code> internally, and
+returns <code>False</code>; <code>target_matches</code> then short-circuits to <code>False</code> before
+<code>sha256sum(target)</code> is ever called, so no exception propagates to
+<code>reconcile_promotions()</code>'s own <code>except OSError</code> handler.</p>
+<p>Extend <code>reconcile_promotions()</code> rather than accept <code>review_required</code>.
+<code>SPEC-reliable-acquisition.md</code> already requires that "restart must reconcile
+a durable promotion intent with the existing final file rather than blindly
+labeling it complete or discarding its computed hash" — the digest for
+failpoint (a) is already durably recorded and was computed before the kill,
+so routing it to manual review discards a trustworthy result instead of
+reconciling it. At the <code>target_matches</code> check, when <code>target</code> is absent
+(<code>is_safe_final_path</code> returns <code>False</code> because <code>target.lstat()</code> raises
+<code>FileNotFoundError</code>) but the <code>promoting</code> row carries a digest and <code>staging</code>
+still exists as a regular file, recreate <code>os.link(staging, target)</code> and
+complete the row the same way the normal <code>transfer()</code> path does, instead of
+falling through to <code>review_required</code>. Retain <code>review_required</code> for every
+other <code>target_matches</code> failure (target present but hash mismatch, staging
+missing, unsafe path). This decision means the piece touches
+<code>Downloader.reconcile_promotions()</code> itself, not only test infrastructure;
+the Deliverables section below reflects that.</p>
+<h2 id="spec-2-4-one-million-row-queue-generator-and-resource-sampler-for-e10">4. One-million-row queue generator and resource sampler (for E10)</h2>
+<p>Requirement: "One million synthetic queue rows... Meet the resource and
+responsiveness targets... do not request every URL," together with the
+engineering targets: combined peak RSS below 512 MiB, at most 64 admitted
+unfinished jobs with at most 4 actively transferring, five-second idle-slot
+refill, two-second status latency, 30-second graceful shutdown. (parent
+specification, scenario table and "Initial acceptance targets.")</p>
+<ul>
+<li>Add a generator that produces one million syntactic queue rows (URLs and
+expected metadata) without writing one million fixture bodies; the fixture
+server may synthesize response bodies for these rows on demand, using the
+same deterministic generator as smaller fixtures, sized small enough that
+a full transfer of every row is not the point of this scenario.</li>
+<li>Add a sampler that records controller and every child engine process RSS,
+summed, at a fixed interval (document the interval; the parent
+specification requires it to be documented, not a specific value) for the
+duration of the run, and reports the maximum sum. Walk the full process
+tree rooted at the controller, not only its direct children: the
+controller spawns <code>torsocks -i aria2c</code> per engine worker
+(<code>Downloader.run_aria2()</code>, <code>src/tod_dl.py</code>), and the transferring <code>aria2c</code>
+process may be a grandchild rather than a direct child, depending on
+whether <code>torsocks</code> exec-replaces itself on the evaluation machine. Confirm
+which it is during implementation instead of assuming direct-children-only
+is sufficient.</li>
+<li>Assert, from the fixture server's request log, that the number of distinct
+URLs requested stays within the configured admission bound across the run,
+not one million — this is the scenario's core assertion, not an
+optimization detail. Candidate 1 (one aria2 process per URL, evaluated
+first per the parent specification's "Candidates and decision order") has
+no separate admission stage: <code>Downloader.run()</code> (<code>src/tod_dl.py</code>) admits a
+row only immediately before submitting it to the worker pool, so
+"admitted" and "actively transferring" are the same count, bounded by the
+single <code>--workers</code> value. The parent specification's "at most 64 admitted,
+unfinished jobs" and "at most 4 actively transferring" targets are
+therefore not two independently checkable bounds under candidate 1; assert
+only that requested-URL count stays within <code>--workers</code>, and record the
+64-job ceiling as not applicable to this candidate rather than asserting
+it as a separate, currently nonexistent bound. If a later candidate (for
+example, the bounded-RPC-feed candidate) introduces a real admission
+queue distinct from active transfers, this bullet must be revised to
+assert both bounds independently.</li>
+<li>Measure status-request latency by issuing a local status request at
+intervals during the run and recording response time; assert the two-second
+target.</li>
+<li>Measure shutdown time by sending the graceful-shutdown signal near the end
+of the run and recording time to process exit; assert the 30-second target,
+including the child-termination escalation path if the controller does not
+exit gracefully within it.</li>
+</ul>
+<p>Open question: decide where the one-million-row queue file lives during the
+run (generated fresh per run vs. cached). Generate it fresh in the isolated
+run directory each time, consistent with every other scenario's isolation
+requirement, unless generation time itself becomes a measured confound.</p>
+<h2 id="spec-2-5-concurrency-timing-assertions-for-e13">5. Concurrency-timing assertions (for E13)</h2>
+<p>Requirement: "Slow large file alongside small files and a due retry. Refill
+idle slots promptly; the large file does not block unrelated work." Engineering
+target: "Refill an eligible idle slot within five seconds, excluding
+deliberate staggering, cooldown, storage pause, and validation backpressure."
+(parent specification, scenario table and "Initial acceptance targets.")</p>
+<ul>
+<li>Add a scripted fixture mix: one slow large file (throttled via the existing
+scripted-response delay mechanism, not a separate throttling
+implementation), several small files that complete quickly, and one item
+already in <code>retry_wait</code> with a due retry timestamp at run start.</li>
+<li>Record the timestamp of every completion and every new admission from the
+controller's durable state: the <code>download_transitions</code> table already
+records a <code>recorded_at</code> timestamp on every status change, including the
+<code>active</code> transition (admission) and the <code>complete</code> transition
+(completion). The fixture server's event log cannot supply these
+timestamps; its recorded events carry no timestamp field
+(<code>FixtureServer._record</code>, <code>src/evaluation/acquisition_evaluation.py</code>).</li>
+<li>Assert that each idle-slot refill following a completion or a due retry
+occurs within five seconds of that completion or due timestamp, excluding
+any interval attributable to deliberate staggering, cooldown, storage
+pause, or validation backpressure that the run's configuration explicitly
+set — record which exclusion, if any, applied to each measured interval.</li>
+<li>Assert that the slow large file's transfer does not delay the small files'
+admission or completion: compare the small files' completion timestamps
+against a run of the same small files with no concurrent large file, or
+against the five-second refill target directly, whichever the
+implementation finds simpler to make objectively checkable.</li>
+</ul>
+<h2 id="spec-2-6-five-item-scoped-run-assertion-for-e11">6. Five-item scoped run assertion (for E11)</h2>
+<p>Requirement: "Five-item run selected from a larger queue... Only those five
+distinct items may transfer, including after retries and restart." (parent
+specification, scenario table.)</p>
+<ul>
+<li>Build a queue file with more than five distinct URLs (for example, ten).
+Drive the run with the controller's existing <code>--max-files 5</code> flag rather
+than a new selection mechanism: <code>Downloader.scope_run()</code> (<code>src/tod_dl.py</code>)
+already populates <code>run_items</code> with the first five queue-order rows whose
+target does not already exist, and every later admission and retry path
+joins against <code>run_items</code>. No controller-code change is needed for the
+boundary itself; this piece is a harness invocation and an assertion, not
+new controller logic.</li>
+<li>Pass the same explicit <code>--run-id</code> value on the initial run and on the
+restart. <code>scope_run()</code> is idempotent only when <code>run_id</code> matches an
+existing <code>run_items</code> population: it returns early when <code>previous</code> (the
+existing row count for that <code>run_id</code>) is nonzero. Without an explicit
+<code>--run-id</code>, the controller derives a new timestamp-based run ID on
+restart, which would let <code>scope_run()</code> reselect up to five different rows
+from the larger queue instead of resuming the same five. Confirm this
+during implementation before writing the assertion; a harness that omits
+<code>--run-id</code> would silently test the wrong thing.</li>
+<li>Include, among the five selected items, one row already in <code>retry_wait</code>
+with a due retry at run start, so the requirement's "including after
+retries" clause is exercised, not only inferred from the restart case.</li>
+<li>Restart the controller once, against the same isolated destination and
+state directories, the same queue file, and the same <code>--run-id</code>, after the
+five selected items reach a terminal or in-progress state.</li>
+<li>Assert, from the fixture server's request log, that the set of distinct
+URLs requested is exactly the five selected URLs, both before and after
+the restart — never a sixth URL from the larger queue file, and never
+fewer than five once the run completes.</li>
+<li>Assert, from durable state, that <code>run_items</code> for this <code>run_id</code> contains
+exactly the same five URLs before and after the restart, in the same
+<code>queue_rank</code> order.</li>
+</ul>
+<p>Resolved: a <code>downloads</code> row exists for every queue URL, including the
+sixth-and-later rows never selected into <code>run_items</code>. <code>Downloader.run()</code>
+calls <code>import_queues(db)</code> unconditionally before <code>scope_run()</code>
+(<code>src/tod_dl.py</code>), and <code>import_queues()</code> inserts a row for every URL read
+from the queue file (<code>INSERT OR IGNORE INTO downloads ...</code>) regardless of
+whether <code>scope_run()</code> later selects it. The sixth-and-later rows therefore
+do have a <code>downloads</code> row; <code>scope_run()</code> only decides which URLs get a
+<code>run_items</code> row and are ever transferred. Assert that the sixth-and-later
+URLs are never requested and never gain a <code>run_items</code> row, not that no
+<code>downloads</code> row exists for them.</p>
+<h2 id="spec-2-deliverables">Deliverables</h2>
+<p>Extend <code>src/evaluation/acquisition_evaluation.py</code>, <code>src/evaluation/aria2_evaluation_adapter.py</code>,
+<code>src/evaluation/run_acquisition_evaluation.py</code>, and the controller finalization path in
+<code>src/tod_dl.py</code> to add the six pieces above. In <code>src/tod_dl.py</code>, this means
+the three failpoints (Section 3) and the <code>reconcile_promotions()</code> extension
+for failpoint (a) resolved in that section's open question; it does not mean
+a fix for the E02 <code>is_incomplete_body_failure()</code> gap (Section 1), which
+stays out of scope for this specification. Section 6 adds no controller
+code, only a scenario function (<code>e11_five_item_scoped_run</code>, for example) in
+<code>src/evaluation/run_acquisition_evaluation.py</code> and its harness-side assertions. Add
+corresponding entries to <code>tests/test_acquisition_evaluation.py</code> for harness
+behavior that unit tests can cover (generator determinism, sampler interval
+correctness, failpoint gating) separately from the end-to-end scenario runs
+that only <code>src/evaluation/run_acquisition_evaluation.py</code> can produce. Do not run E02,
+E05, E06, E10, E11, or E13 as part of this specification; running them and
+recording results belongs to a later evaluation report, per
+<a href="SPEC-acquisition-tool-evaluation.md">the acquisition tool evaluation specification</a>.</p>
+<h2 id="spec-2-next-steps">Next steps</h2>
+<p>All six pieces are built. Run E02, E05, E06, E10, E11, and E13 and record
+results in a later evaluation report, per
+<a href="SPEC-acquisition-tool-evaluation.md">the acquisition tool evaluation specification</a>.</p>
+
+    </section>
+<section id="spec-3" class="spec-section" aria-label="Specification: acquisition fault-recovery tests">
+      <div class="section-meta"><span>Specification 03</span>
+        <span>SPEC-acquisition-fault-recovery.md</span></div>
+      
+      <h1 id="spec-3-specification-acquisition-fault-recovery-tests">Specification: acquisition fault-recovery tests</h1>
+<p>Status: implemented, September 20, 2026. The test suite covers every
+recovery case and scheduler condition. This specification defines the
+fault-test contract. It supplements the
+<a href="SPEC-reliable-acquisition.md">reliable acquisition specification</a>. Tests must
+protect acquired data and must not make source requests.</p>
+<h2 id="spec-3-test-boundary">Test boundary</h2>
+<p>Fault tests must use a temporary destination, temporary state directory, and a
+local fake transfer engine. Tests must not read, write, rename, or hash files
+below <code>downloaded_files/</code>, <code>archive/</code>, <code>pst_extracted/</code>, <code>msg_extracted/</code>, or
+<code>output/</code>.</p>
+<p>The fake engine must simulate partial files, successful completion, terminal
+failure, a stalled transfer, and a changed remote representation. The harness
+must expose controlled failure points in SQLite updates, file flushes,
+exclusive final-file creation, staging cleanup, and controller shutdown.</p>
+<h2 id="spec-3-required-recovery-cases">Required recovery cases</h2>
+<p>Each test must stop the controller at one named failure point, start a new
+controller with the same run ID and unchanged queue input, then check durable
+state and filesystem results.</p>
+<p>The standard downloader test file must name recovery tests by the failure point.
+Each test must build a new temporary root. The test must use fixture bytes and a
+local fake transfer engine. The test must not start <code>aria2c</code>, <code>torsocks</code>, or a
+source request.</p>
+<table>
+<thead>
+<tr>
+<th>Failure point</th>
+<th>Required result after restart</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Before attempt state commits</td>
+<td>The item remains eligible or is safely requeued.</td>
+</tr>
+<tr>
+<td>During an active partial transfer</td>
+<td>The partial and its control metadata remain available for resume.</td>
+</tr>
+<tr>
+<td>After engine success but before hashing completes</td>
+<td>The item is not final. The controller rechecks staging.</td>
+</tr>
+<tr>
+<td>After hash and promotion intent commit</td>
+<td>The controller reconciles the intended final path and digest.</td>
+</tr>
+<tr>
+<td>After exclusive final creation but before completion commit</td>
+<td>The controller hashes the existing final and records completion only on a match.</td>
+</tr>
+<tr>
+<td>After completion commit but before staging cleanup</td>
+<td>The final remains complete and cleanup is safe to repeat.</td>
+</tr>
+<tr>
+<td>During candidate creation</td>
+<td>The existing final remains unchanged and the incoming bytes remain reviewable.</td>
+</tr>
+<tr>
+<td>During SQLite commit or WAL checkpoint</td>
+<td>The controller reports a local failure and does not admit new work until recovery.</td>
+</tr>
+</tbody></table>
+<h2 id="spec-3-transfer-and-scheduler-cases">Transfer and scheduler cases</h2>
+<p>The harness must test transfer failures without network access. It must verify
+that a retry does not admit a queue item outside the immutable selection.</p>
+<p>The harness must test these scheduler conditions:</p>
+<ul>
+<li><code>retry_now</code> wakes admission while another transfer remains active.</li>
+<li>An eligible retry fills an idle worker slot within one admission poll.</li>
+<li>A time limit stops admission only at expiry.</li>
+<li>A storage-reserve failure stops admission without changing final files.</li>
+<li>A zero-progress transfer reaches the configured stall policy without a busy
+loop.</li>
+</ul>
+<h2 id="spec-3-assertions-and-artifacts">Assertions and artifacts</h2>
+<p>Every fault test must assert final-file paths, file bytes, SHA-256 digests,
+SQLite state, transition order, and staging or candidate preservation. The
+test must check that no final path is overwritten. The test must check that a
+restart does not expand the selected item set.</p>
+<p>The test harness must retain its temporary artifacts only when a test fails.
+When it retains artifacts, it must print their path and must not copy them into
+the repository.</p>
+<h2 id="spec-3-acceptance-criteria">Acceptance criteria</h2>
+<p>The project must run all fault tests in the standard downloader test command.
+The tests must pass before a downloader change is handed off. A failed fault
+test blocks unattended acquisition until an operator records the failure and
+the project resolves it.</p>
+
+    </section>
+<section id="spec-4" class="spec-section" aria-label="Specification: multi-route acquisition">
+      <div class="section-meta"><span>Specification 04</span>
+        <span>SPEC-acquisition-multi-route.md</span></div>
+      
+      <h1 id="spec-4-specification-multi-route-acquisition">Specification: multi-route acquisition</h1>
+<p>Status: implemented, September 23, 2026. The shared <code>Route</code> vocabulary
+(<code>src/routing.py</code>), the acquisition engine's per-item route resolution, the
+queue <code>route=</code> token, the mixed-route startup gate, and the route-aware
+aria2 invocation, HEAD probe, and Tor circuit-renewal gating are implemented.
+This specification governs how
+<a href="SPEC-reliable-acquisition.md">the acquisition engine</a> picks a network route
+for each selected item, reusing the same vocabulary
+<a href="SPEC-inventory-discovery.md">the discovery network fetch</a> already uses for
+snapshot fetches.</p>
+<h2 id="spec-4-outcome-and-scope">Outcome and scope</h2>
+<p>The acquisition engine was Tor-only: every transfer, HEAD probe, and outage
+recovery went through <code>torsocks -i</code>, unconditionally. This specification
+lets an operator route a selected item through Tor, a direct connection, or
+a configured proxy, per item, without weakening Tor isolation for any item
+that still needs it. It does not add a new transport (aria2 and its existing
+process model are unchanged); it only makes the wrap around aria2
+conditional on a resolved <code>Route</code>.</p>
+<h2 id="spec-4-route-resolution">Route resolution</h2>
+<p><code>src/routing.py</code> defines <code>Route</code> (<code>kind</code>: <code>tor</code>, <code>direct</code>, or <code>proxy</code>;
+<code>proxy_name</code> when <code>kind == "proxy"</code>; <code>label</code>, e.g. <code>"tor"</code>, <code>"direct"</code>,
+<code>"proxy:corp-relay"</code>) and <code>resolve_route(host, *, is_onion, require_tor, configured_proxy)</code>. An <code>.onion</code> host always resolves to <code>tor</code> and accepts no
+override, including a queue line that names a different route. Otherwise an
+explicit <code>tor</code> request or a missing route selection forces <code>tor</code>; then a
+configured proxy wins; a bare clearnet host resolves to <code>direct</code>.</p>
+<p>A queue line may add a trailing <code>route=</code> token: <code>route=tor</code>, <code>route=direct</code>,
+or <code>route=proxy:&lt;name&gt;</code>. A line without the token keeps the pre-multi-route
+behavior exactly: every host, onion or clearnet, resolves to <code>tor</code>. This
+keeps every existing queue file working unchanged; a non-default route is
+opt-in per line. The resolved route's <code>label</code> is stored on the item's
+<code>downloads.route</code> column at import time and does not change afterward for
+that item, matching the run's other immutable selection properties.</p>
+<h2 id="spec-4-engine-integration-points">Engine integration points</h2>
+<p>Five call sites in <code>src/downloader/</code> read the item's resolved route instead
+of hardcoding Tor:</p>
+<ul>
+<li><code>downloader/transfer.py</code>'s <code>run_aria2()</code> builds its command prefix from
+<code>routing.build_route_prefix(route, torsocks_path)</code>: <code>tor</code> wraps aria2c in
+<code>torsocks -i</code>; <code>direct</code> and <code>proxy</code> add no prefix. A <code>proxy</code> route also
+adds aria2's <code>--all-proxy=&lt;name&gt;</code> argument
+(<code>routing.aria2_proxy_args(route)</code>). Substituting aria2's proxy option for
+a Tor SOCKS listener is never valid for the <code>tor</code> route; see
+<a href="SPEC-acquisition-tool-evaluation.md#tor-and-process-model">the evaluation specification's Tor and process model
+section</a> for
+why, which now scopes that rule to the <code>tor</code> route explicitly.</li>
+<li><code>downloader/core.py</code>'s <code>run()</code> computes every selected item's resolved
+route before starting the transfer loop and calls
+<code>tor.verify_tor_isolation()</code> only if at least one resolves to <code>tor</code>. The
+durable manifest's <code>tor_isolation_preflight</code> key records whether the
+preflight ran and, when it did not, why.</li>
+<li><code>downloader/transfer.py</code>'s <code>transfer()</code> requests a fresh Tor circuit
+(<code>request_newnym</code>) after a connectivity failure only when the failed
+item's route is <code>tor</code>. A <code>direct</code> or <code>proxy</code> item's connectivity failure
+falls straight through to the existing backoff and retry; Tor is not
+carrying that item's traffic, so renewing its circuits fixes nothing.</li>
+<li><code>downloader/representation.py</code>'s <code>head_request()</code> (the outage-recovery and
+resume-representation probe) uses the same route-driven command shape as
+<code>run_aria2</code>.</li>
+<li><code>downloader/state.py</code>'s <code>next_pending()</code> and <code>next_recheck()</code> select the
+<code>route</code> column alongside the item's other transfer state, so every reader
+of a pending or rechecked row has the route it must use.</li>
+</ul>
+<h2 id="spec-4-schema-and-provenance">Schema and provenance</h2>
+<p><code>downloads.route</code> (nullable <code>TEXT</code>) holds the resolved route's <code>label</code>.
+<code>NULL</code> or absent means the historical, pre-migration <code>tor</code> behavior; an
+existing state directory opened by a build with this column adds it via a
+guarded <code>ALTER TABLE</code>, never rewriting existing rows' values. Provenance's
+<code>attempt_finished</code> event records <code>route</code> alongside its other per-attempt
+fields, so an evidence review can see which route served each attempt.</p>
+<h2 id="spec-4-mixed-route-startup-gate">Mixed-route startup gate</h2>
+<p>A queue whose selected items resolve to more than one route kind (for
+example, one <code>.onion</code> item mixed with a clearnet <code>route=direct</code> item) aborts
+the run at startup, before any admission, unless the operator passes
+<code>--allow-mixed-routes</code>. An operator who did not expect a mixed selection
+must not discover after the fact that some items silently left Tor; passing
+the flag is an explicit, one-time acknowledgment for that run. <code>.onion</code> and
+<code>require_tor</code> items always resolve to <code>tor</code>, so this gate only fires when a
+queue actually combines a Tor item with a <code>direct</code> or <code>proxy</code> item.</p>
+<h2 id="spec-4-acceptance-and-next-steps">Acceptance and next steps</h2>
+<p>Use synthetic fixtures and temporary state directories to demonstrate:</p>
+<ul>
+<li>A queue line without a <code>route=</code> token still resolves to <code>tor</code>, matching
+pre-multi-route behavior exactly.</li>
+<li>An <code>.onion</code> host resolves to <code>tor</code> even when its queue line names
+<code>route=direct</code> or <code>route=proxy:&lt;name&gt;</code>.</li>
+<li><code>run_aria2()</code>'s and <code>head_request()</code>'s command shape omits <code>torsocks</code> for
+<code>direct</code> and <code>proxy</code> routes and includes it only for <code>tor</code>.</li>
+<li><code>verify_tor_isolation()</code> runs when any selected item resolves to <code>tor</code> and
+is skipped when none does.</li>
+<li>A connectivity failure on a <code>direct</code> or <code>proxy</code> item never calls
+<code>request_newnym</code>; a <code>tor</code> item's connectivity failure still does.</li>
+<li>Opening a state directory created before this column existed adds <code>route</code>
+without altering any other row value.</li>
+<li>A mixed-route queue aborts at startup without <code>--allow-mixed-routes</code> and
+proceeds, running the Tor preflight, once the flag is passed.</li>
+</ul>
+<p>No live scraping, real Tor circuit, or bulk acquisition is part of writing
+or reviewing this specification, per AGENTS.md's dry-run rule.</p>
+<h2 id="spec-4-native-route-selection">Native route selection</h2>
+<p>The native transfer engine owns URL-queue admission. Tor routes use isolated
+body children. Direct routes and HTTP proxies use the shared body transport.
+Unsupported native proxy kinds fail before contact. Descriptor routing keeps
+its existing support.</p>
+<p>Contract owner: <a href="SPEC-native-engine-cutover.md">native cutover</a>.</p>
+
+    </section>
+<section id="spec-5" class="spec-section" aria-label="Specification: acquisition provenance manifest">
+      <div class="section-meta"><span>Specification 05</span>
+        <span>SPEC-acquisition-provenance.md</span></div>
+      
+      <h1 id="spec-5-specification-acquisition-provenance-manifest">Specification: acquisition provenance manifest</h1>
+<p>Status: implemented, September 20, 2026. The controller writes signed
+provenance records, and the verifier checks them. This specification defines
+the provenance contract. It supplements the
+<a href="SPEC-reliable-acquisition.md">reliable acquisition specification</a>. The
+SQLite database remains the controller's recovery authority.</p>
+<h2 id="spec-5-purpose-and-boundary">Purpose and boundary</h2>
+<p>The downloader must produce an exportable record that links each final file to
+its source request, local validation, and finalization result. The record can
+prove that a named local file has a recorded SHA-256 digest. The record cannot
+prove that the source served an original or complete collection.</p>
+<p>The controller must not modify <code>downloaded_files/</code> to add provenance data. It
+must write each session record set only below
+<code>download-state/provenance/&lt;run-id&gt;/&lt;session-id&gt;/</code>. The monitor must remain
+read-only and must not create provenance records.</p>
+<h2 id="spec-5-record-set">Record set</h2>
+<p>For each controller session, the controller must create one new record
+directory and write these files:</p>
+<ul>
+<li><code>events.jsonl</code> contains append-only provenance events.</li>
+<li><code>summary.json</code> contains the final session summary and the final event digest.</li>
+<li><code>schema.json</code> contains the versioned JSON Schema and canonicalization method.</li>
+</ul>
+<p>The controller must create each record directory with mode <code>0700</code>. It must
+create each record file with mode <code>0600</code>. The controller must create and fsync
+the record directory before it writes a record. When it writes <code>summary.json</code>
+or <code>schema.json</code>, it must fsync a temporary file, atomically replace the
+target, and fsync the record directory.</p>
+<p><code>events.jsonl</code> must contain one UTF-8 JSON object and one LF byte per line.
+Before the controller records the related durable completion state, it must
+flush and fsync the event file. A failed record write must stop new admission
+and report a local failure. A completed file without a durable provenance event
+is unresolved.</p>
+<h2 id="spec-5-event-format">Event format</h2>
+<p>Each event must contain these fields. Unknown source metadata must use JSON
+<code>null</code>. Timestamps must use UTC RFC 3339 format with a <code>Z</code> offset.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>schema_version</code></td>
+<td>Positive integer schema version.</td>
+</tr>
+<tr>
+<td><code>event_id</code></td>
+<td>Unique UUID for the event.</td>
+</tr>
+<tr>
+<td><code>sequence</code></td>
+<td>Positive integer that increases by one within the record set.</td>
+</tr>
+<tr>
+<td><code>event_type</code></td>
+<td>One of <code>run_started</code>, <code>attempt_finished</code>, <code>finalized</code>, <code>candidate_created</code>, <code>run_closed</code>, or <code>local_failure</code>.</td>
+</tr>
+<tr>
+<td><code>run_id</code>, <code>session_id</code></td>
+<td>Immutable selected run identifier and controller-session identifier.</td>
+</tr>
+<tr>
+<td><code>recorded_at</code></td>
+<td>Event creation time.</td>
+</tr>
+<tr>
+<td><code>previous_digest</code></td>
+<td>SHA-256 digest of the preceding event, or <code>null</code> for sequence one.</td>
+</tr>
+<tr>
+<td><code>event_digest</code></td>
+<td>SHA-256 digest of the canonical event object without <code>event_digest</code>.</td>
+</tr>
+</tbody></table>
+<p>The controller must serialize event objects with the JSON Canonicalization
+Scheme (JCS), RFC 8785. <code>schema.json</code> must be a JSON Schema Draft 2020-12
+document encoded as UTF-8. It must identify <code>JCS-RFC8785</code>, define both event
+and summary objects, require the fields and values in this specification, and
+reject unknown fields for its schema version. <code>schema_sha256</code> is the SHA-256
+digest of the exact UTF-8 bytes of <code>schema.json</code>. The controller must calculate
+each event digest from UTF-8 canonical bytes. Each digest must be a lowercase,
+64-character hexadecimal SHA-256 value. Consumers must reject an invalid JSON
+object, duplicate JSON object keys, a missing required field, an unknown event
+type, a sequence gap, a duplicate event ID, a changed previous digest, or an
+invalid event digest.</p>
+<p>For sequence one, <code>previous_digest</code> must be <code>null</code>. For every later sequence,
+<code>previous_digest</code> must be a digest in the format above. Every event <code>run_id</code>
+and <code>session_id</code> must equal the identifiers in its record-directory path.</p>
+<h2 id="spec-5-acquisition-fields">Acquisition fields</h2>
+<p>Every item event, which is <code>attempt_finished</code>, <code>finalized</code>, or
+<code>candidate_created</code>, must include <code>item_id</code>. The value must be the stable item
+ID from the immutable selected manifest. This field links events for one item.</p>
+<p><code>attempt_finished</code> must include these fields. The controller must include every
+field, even when its value is <code>null</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type and requirement</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>item_id</code></td>
+<td>Stable selected-manifest item ID.</td>
+</tr>
+<tr>
+<td><code>source_url</code></td>
+<td>Exact requested URL.</td>
+</tr>
+<tr>
+<td><code>attempt_number</code></td>
+<td>Positive integer.</td>
+</tr>
+<tr>
+<td><code>request_started_at</code>, <code>request_finished_at</code></td>
+<td>UTC RFC 3339 timestamps.</td>
+</tr>
+<tr>
+<td><code>final_url</code></td>
+<td>Final URL string, or <code>null</code> when no response URL exists.</td>
+</tr>
+<tr>
+<td><code>redirect_chain</code></td>
+<td>Array of zero or more URL strings.</td>
+</tr>
+<tr>
+<td><code>http_status</code></td>
+<td>Integer from 100 through 599, or <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>outcome</code></td>
+<td>One of <code>success</code>, <code>retryable_failure</code>, <code>unavailable</code>, <code>access_denied</code>, <code>validation_failed</code>, or <code>stopped</code>.</td>
+</tr>
+<tr>
+<td><code>response_content_length</code>, <code>response_content_range</code>, <code>response_content_type</code>, <code>response_etag</code>, <code>response_last_modified</code></td>
+<td>Raw response-field string, or <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>route</code></td>
+<td>The resolved <code>Route.label</code> this attempt used (<code>tor</code>, <code>direct</code>, or <code>proxy:&lt;name&gt;</code>), or <code>null</code> for an attempt recorded before this field existed. See <a href="SPEC-acquisition-multi-route.md">the multi-route acquisition specification</a>.</td>
+</tr>
+</tbody></table>
+<p><code>redirect_chain</code> lists the URLs between <code>source_url</code> and <code>final_url</code>, in order.
+It is empty when the request had no redirect. The controller takes the response
+fields from the last HTTP response of the attempt. If a redirect URL carries
+user-info credentials, <code>final_url</code> is <code>null</code> and <code>redirect_chain</code> is empty.
+<code>access_denied</code> records an HTTP 401 or 403 response.</p>
+<p>The record must never include request cookies, authorization values, Tor
+control cookies, RPC secrets, or monitor capability tokens. The controller must
+reject a source or redirect URL with user-info credentials or a query string.
+The controller cannot tell which query values grant access, so it treats every
+query string as access-granting. Queue import rejects such a source URL. If any
+URL of an attempt has user-info credentials or a query string, <code>final_url</code> is
+<code>null</code> and <code>redirect_chain</code> is empty. The event writer rejects any event URL
+with either. The controller must record an unavailable or redacted value
+explicitly rather than silently omit a required field.</p>
+<p><code>finalized</code> must include <code>item_id</code>, <code>source_url</code>, <code>logical_relative_path</code>,
+<code>final_relative_path</code>, <code>byte_count</code>, <code>sha256</code>, <code>validation_method_version</code>, and
+<code>finalized_at</code>. <code>byte_count</code> must be a nonnegative integer. <code>sha256</code> must use
+the digest format above. Both relative paths must use slash-separated relative
+paths and must not contain <code>.</code> or <code>..</code> path components. <code>finalized_at</code> must be
+a UTC RFC 3339 timestamp.</p>
+<p><code>finalized</code> must also include an <code>expected_size</code>, <code>expected_checksum</code>, <code>etag</code>,
+and <code>last_modified</code> validation object. Each object must contain <code>available</code> and
+<code>compared</code> Boolean fields and a <code>value</code> field. The value is <code>null</code> when
+<code>available</code> is false. <code>compared</code> must be false when <code>available</code> is false.
+When available, <code>expected_size.value</code> is a nonnegative integer.
+<code>expected_checksum.value</code>, <code>etag.value</code>, and <code>last_modified.value</code> are strings.</p>
+<p>The controller sets <code>etag.value</code> and <code>last_modified.value</code> from the values
+stored for resume checks. If none are stored, it uses the response fields of the
+final attempt. <code>etag.compared</code> is true only when a resume check confirmed the
+stored ETag against the source. <code>expected_size.value</code> is the exact full size
+that the final response announced: <code>Content-Length</code> of a 200 response, or the
+total in <code>Content-Range</code> of a 206 response. An inventory size token is never an
+expected size. <code>expected_size.compared</code> is true when the controller compared this
+value with the staged byte count before promotion. A mismatch blocks promotion:
+the item moves to <code>review_required</code> with review code <code>size_mismatch</code>, and the
+candidate reason is <code>validation_failed</code>. <code>last_modified.compared</code> stays false
+until the controller compares it.</p>
+<p><code>candidate_created</code> must include <code>item_id</code>, <code>staging_relative_path</code>,
+<code>candidate_relative_path</code>, <code>sha256</code>, and <code>finalization_failure_reason</code>.
+<code>sha256</code> is <code>null</code> when hashing did not complete. The failure reason must be
+one of <code>validation_failed</code>, <code>destination_collision</code>, <code>unsafe_path</code>,
+<code>promotion_error</code>, <code>recovery_review</code>, or <code>body_integrity_replaced</code>.
+<code>body_integrity_replaced</code> applies only to an r5 body-integrity replacement.
+The controller records
+<code>recovery_review</code> for a changed remote representation, for missing version
+protection, and when promotion recovery cannot finish and the staged file is a
+safe regular file. In that last case the staged file stays in place. It must
+not label a candidate as evidence final. The controller records <code>unsafe_path</code> when the destination
+path holds a symlink or a non-directory parent. It records <code>promotion_error</code>
+when creating the final link fails with an operating-system error, during a
+live transfer or during promotion recovery. For these two reasons the staged
+file stays in place, because safe-path remediation reads it there. The
+candidate path is a hard link to the staged file. If the controller cannot
+create that link, the item still moves to <code>review_required</code>, and the
+controller writes no <code>candidate_created</code> event for it. When safe-path
+remediation later promotes the staged file, the controller removes each
+candidate link that shares the staged file's inode. <code>staging_relative_path</code> is relative to <code>download-state/</code>.
+<code>candidate_relative_path</code> is relative to
+<code>download-state/redownload-candidates/</code>.</p>
+<p><code>run_started</code> must include <code>queue_input_digests</code>, <code>selection_settings</code>, and
+<code>selected_item_count</code>, which is a nonnegative integer. <code>run_closed</code> must
+include <code>closed_at</code>, <code>close_reason</code>, and <code>durable_outcome_counts</code>.
+<code>close_reason</code> must be one of <code>finished</code>, <code>stopped</code>, <code>time_limit</code>,
+<code>local_failure</code>, or <code>interrupted</code>. Every durable-outcome count must be a
+nonnegative integer.
+<code>local_failure</code> must include <code>failure_code</code> and a redacted <code>failure_detail</code>.
+<code>failure_code</code> must be one of <code>record_write</code>, <code>database_write</code>, <code>permission</code>,
+<code>storage</code>, or <code>other_local_failure</code>.</p>
+<h2 id="spec-5-summary-and-verification">Summary and verification</h2>
+<p><code>summary.json</code> must include the run ID, session ID, queue-input digests,
+selection settings, event count, final event digest, selected-item count,
+durable outcome counts, the session finalized count, the SHA-256 digest of
+<code>schema.json</code>, and an Ed25519 signature. The durable outcome counts cover all
+items of the run. <code>session_finalized_count</code> is the number of <code>finalized</code> events
+that this session wrote. The verifier must require that it equals the number of
+<code>finalized</code> events in the session and does not exceed the durable <code>complete</code>
+count. A resumed session can finalize fewer files than the run total. The
+signature must cover the JCS canonical summary object without the signature
+field. The summary must also identify the signing public-key fingerprint.
+<code>schema_sha256</code> must use the digest format above. <code>signature</code> must be an
+unpadded base64url encoding of the 64-byte Ed25519 signature.
+<code>signing_key_fingerprint</code> must be the lowercase hexadecimal SHA-256 digest of
+the 32-byte Ed25519 public key. It must not contain full response bodies or
+copied source files.</p>
+<p>The operator must retain the trusted Ed25519 public key or its expected
+fingerprint outside the record directory. A public key copied only with the
+record set is not a trust anchor.</p>
+<p>The project must provide a read-only verifier. The verifier must require a
+trusted public key or expected public-key fingerprint. It must check the schema
+digest, summary signature, event sequence, digest chain, summary final-event
+digest, final-file existence, final-file SHA-256 digests, and byte counts. The
+verifier must validate the summary and every event against <code>schema.json</code>. It
+must verify that event and summary identifiers equal their record-directory
+path. The verifier must report each mismatch and return a nonzero exit status.
+The verifier must never repair, rename, or delete evidence files.</p>
+<h2 id="spec-5-acceptance-criteria">Acceptance criteria</h2>
+<p>Implementation is complete when tests show that a completed fixture creates a
+valid record set and that each of these changes causes verification failure:</p>
+<ul>
+<li>A changed final file.</li>
+<li>A removed or reordered event line.</li>
+<li>A changed event field.</li>
+<li>A wrong summary final-event digest.</li>
+<li>A changed summary signature or schema file.</li>
+<li>A removed final event line with a replaced matching summary.</li>
+<li>A <code>finalized</code> event count that differs from <code>session_finalized_count</code>.</li>
+<li>A missing final file.</li>
+</ul>
+
+    </section></main>
+
+</body></html>

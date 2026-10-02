@@ -134,6 +134,6 @@ engineering question you want to review.
 [motion]: assets/acquisition-motion.gif
 [motion-page]: assets/acquisition-motion-signal.html
 [motion-still]: assets/acquisition-motion.png
-[demo-pdf]: tor-dl-tech-specs.pdf
-[demo-html]: tor-dl-tech-specs.html
-[presentation]: tor-dl-web.html
+[demo-pdf]: tod-dl-tech-specs.pdf
+[demo-html]: tod-dl-tech-specs.html
+[presentation]: tod-dl-web.html

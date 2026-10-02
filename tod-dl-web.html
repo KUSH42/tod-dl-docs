@@ -225,6 +225,52 @@
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
     }
+    /* Integrated Specifications Section */
+    .specs-container {
+      border-top: 3px solid var(--ink);
+      padding: 44px 0 52px;
+    }
+    .specs-header { margin-bottom: 32px; }
+    .specs-header h2 {
+      font-size: clamp(34px, 3.6vw, 52px);
+      letter-spacing: -.055em;
+      font-weight: 800;
+      line-height: 1.05;
+      margin: 12px 0 0;
+    }
+    .specs-body {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 48px;
+    }
+    .specs-body h2 {
+      font-size: 20px;
+      letter-spacing: -.03em;
+      font-weight: 800;
+      border-top: 1px solid var(--ink);
+      padding-top: 16px;
+      margin-top: 32px;
+      grid-column: 1 / -1;
+    }
+    .specs-body h2:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+    .specs-body p, .specs-body ul { font-size: 14px; line-height: 1.65; margin: 0 0 16px; }
+    .specs-body ul { padding-left: 18px; }
+    .specs-body li { margin-bottom: 8px; }
+    .specs-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 13px;
+    }
+    .specs-body th, .specs-body td {
+      border: 1px solid var(--ink);
+      padding: 10px 12px;
+      text-align: left;
+    }
+    .specs-body th { background: rgba(0,0,0,0.04); font-weight: 700; }
+    @media (max-width: 820px) {
+      .specs-body { grid-template-columns: 1fr; gap: 24px; }
+    }
   </style>
 </head>
 <body>
@@ -374,183 +420,6 @@
           <a href="../PORTFOLIO-OVERVIEW.md">Read the project brief ↗</a>
         </div>
       </section>
-      <!-- SPECIFICATIONS_SECTION_START -->
-      <section class="specs-container" id="specs" aria-labelledby="specs-title">
-        <div class="specs-header">
-          <div class="mono">Reference Library / Revision aba1721 (2026-10-01 11:44:02 UTC)</div>
-          <h2 id="specs-title">Specifications Index</h2>
-        </div>
-        <div class="specs-body">
-          <h1 id="specification-guide">Specification guide</h1><p><a href="README">Documentation</a> / Specifications</p>
-<p>Use the specifications as an engineering reference library. Start with a
-system concern, then follow its contract to source, tests, and dated reports.
-For an introduction, read the <a href="PORTFOLIO-OVERVIEW">project brief</a>.</p>
-<h2 id="read-a-contract-and-its-evidence-together">Read a contract and its evidence together</h2><p>Each spec owns a behavior contract and carries a <code>Status:</code> line. Read that
-line and the relevant section before treating a requirement as available.
-A partially implemented spec can contain completed behavior and planned
-extensions.</p>
-<p><a href="#spec-OPEN-WORK">Open work</a> identifies remaining gaps.
-<a href="../specs/reports/">Reports</a> record results for a dated scope. Neither replaces
-the owning specification. This guide groups links without copying mutable
-status labels.</p>
-<h2 id="acquisition-and-recovery">Acquisition and recovery</h2><p>These contracts define selection, transfer, storage, and interruption handling.</p>
-<ul>
-<li><a href="#spec-SPEC-native-transfer-engine">Native transfer</a>: native worker
-boundaries and release 1 requirements.</li>
-<li><a href="#spec-SPEC-native-engine-cutover">Native cutover</a>: protected resume,
-engine retirement, compatibility, and the current acceptance gate.</li>
-<li><a href="#spec-SPEC-reliable-acquisition">Reliable acquisition</a>: selection,
-retries, resource admission, validation, and finalization.</li>
-<li><a href="#spec-SPEC-acquisition-fault-recovery">Fault recovery</a>: required
-failure cases and assertions.</li>
-<li><a href="#spec-SPEC-http-transport">HTTP transport</a>: descriptors, route policy,
-redirects, HTTPS, and representation checks.</li>
-<li><a href="#spec-SPEC-acquisition-multi-route">Multiple routes</a>: Tor, direct,
-and configured proxy acquisition.</li>
-<li><a href="#spec-SPEC-tor-circuit-recovery">Tor recovery</a>: isolation and circuit
-renewal boundaries.</li>
-<li><a href="#spec-SPEC-control-launch">Attached control launch</a>: console startup
-and lifecycle.</li>
-<li><a href="#spec-SPEC-resume-script">Resume scripts</a>: generated run continuation.</li>
-</ul>
-<h2 id="provenance-trust-and-handover">Provenance, trust, and handover</h2><p>These contracts define recorded claims and the evidence required to check them.</p>
-<ul>
-<li><a href="#spec-SPEC-acquisition-provenance">Acquisition provenance</a>: the
-original signed session records.</li>
-<li><a href="#spec-SPEC-run-custody">Run custody</a>: version 2 checkpoints, run
-indexes, completeness, lineage, and handover.</li>
-<li><a href="#spec-SPEC-acquisition-context">Acquisition context</a>: session
-environment, validation evidence, and custody references.</li>
-<li><a href="#spec-SPEC-manifest-verification-hardening">Verification hardening</a>:
-parsing, canonicalization, schema checks, and safe reads.</li>
-<li><a href="#spec-SPEC-manifest-v2-evolution">Manifest evolution</a>: schema
-ownership, revisions, and extensions.</li>
-<li><a href="#spec-SPEC-external-timestamping">External timestamping</a>: submission,
-retained evidence, trust, and release policy.</li>
-<li><a href="#spec-SPEC-response-body-integrity">Response-body integrity</a>: the
-received-byte and final-file coverage, with remaining profile work.</li>
-<li><a href="#spec-SPEC-sealed-sidecar-handover">Sealed-sidecar handover</a>: the
-planned export inclusion policy.</li>
-<li><a href="#spec-SPEC-sealed-multi-recipient">Multiple sealed recipients</a>:
-encrypted request evidence for several recipients and acceptance gaps.</li>
-<li><a href="#spec-SPEC-sealed-re-encryption">Authorized re-encryption</a>: the
-planned derived evidence sets for later recipients.</li>
-<li><a href="#spec-SPEC-forensic-compliance">Forensic compliance</a>: assessment
-requirements and profile definitions.</li>
-<li><a href="#spec-SPEC-evidence-preservation">Evidence preservation</a>: qualified
-time and archive preservation requirements.</li>
-</ul>
-<p>Compliance and preservation documents describe requirements. They do not
-establish a certification for the current software.</p>
-<h2 id="inventory-and-discovery">Inventory and discovery</h2><p>These contracts connect listings, manifests, and selected request inputs.</p>
-<ul>
-<li><a href="#spec-SPEC-inventory-snapshot-manifest">Inventory manifests</a>: local
-parsing, accepted snapshots, manifests, diffs, and queue export.</li>
-<li><a href="#spec-SPEC-inventory-discovery">Discovery</a>: configured listing fetch
-and remaining discovery work.</li>
-<li><a href="#spec-SPEC-inventory-request-mapping">Request mapping</a>: inventory
-rows mapped to version 2 descriptors.</li>
-<li><a href="#spec-SPEC-target-dir-rescan">Target-directory rescan</a>: planned
-reconciliation of local files against inventory.</li>
-</ul>
-<h2 id="console-and-control">Console and control</h2><p>Start with the console contract, then read the view or endpoint you need.</p>
-<ul>
-<li><a href="#spec-SPEC-console-ui">Console UI</a>: application layout and lifecycle.</li>
-<li><a href="#spec-SPEC-console-visual-style">Visual style</a>: labels, emphasis,
-colors, and interaction presentation.</li>
-<li><a href="#spec-SPEC-controller-control-ui">Controller controls</a>: authority,
-authentication, confirmation, and command behavior.</li>
-<li><a href="#spec-SPEC-console-queue">Queue</a>: selection, search, pagination,
-and item actions.</li>
-<li><a href="#spec-SPEC-console-errors-review">Errors and review</a>: issue review.</li>
-<li><a href="#spec-SPEC-console-item-details">Item details</a>: one item&#39;s state.</li>
-<li><a href="#spec-SPEC-console-worker-table">Worker table</a>: active worker rows.</li>
-<li><a href="#spec-SPEC-console-worker-details">Worker details</a>: transfer detail.</li>
-<li><a href="#spec-SPEC-console-detail-layout">Detail layout</a>: detail panels.</li>
-<li><a href="#spec-SPEC-console-keymap">Keymap</a>: keyboard interaction.</li>
-<li><a href="#spec-SPEC-console-activity-log">Activity log</a>: event presentation.</li>
-<li><a href="#spec-SPEC-console-inspection">Inspection</a>: read-only detail queries.</li>
-<li><a href="#spec-SPEC-download-telemetry">Download telemetry</a>: published progress.</li>
-<li><a href="#spec-SPEC-telemetry-state-projection">State projection</a>: committed
-controller state projected for observation.</li>
-</ul>
-<h2 id="evaluation">Evaluation</h2><p>These contracts define how transfer engines are tested against local fixtures.</p>
-<ul>
-<li><a href="#spec-SPEC-acquisition-tool-evaluation">Tool evaluation</a>: scenarios
-and engine-selection criteria.</li>
-<li><a href="#spec-SPEC-acquisition-evaluation-infrastructure">Evaluation infrastructure</a>:
-fixture generation, failure injection, and measurement.</li>
-</ul>
-<p>The <a href="PORTFOLIO-OVERVIEW.md#validation-evidence">project brief</a> links selected
-reports with dates and limits. Browse <a href="../specs/reports/">all reports</a> when
-reviewing a specific acceptance gate. Native cutover requires its complete
-matrix and operator pilot. Historical aria2 evaluation does not establish
-native acceptance.</p>
-<h2 id="publication-proposal">Publication proposal</h2><p>The tracked Markdown guides are the current reading interface. The following
-proposal describes a future HTML and PDF publication path; no site build or
-deployment is included in this documentation change.</p>
-<h3 id="one-source-three-reading-formats">One source, three reading formats</h3><p>Keep <code>SPEC-*.md</code> as the contract source. Render editions from an explicit
-Git revision so readers can connect an artifact to its source.</p>
-<table>
-<thead>
-<tr>
-<th>Format</th>
-<th>Reader need</th>
-<th>Proposed presentation</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Markdown</td>
-<td>Review changes</td>
-<td>Grouped guide and source history</td>
-</tr>
-<tr>
-<td>HTML</td>
-<td>Search and browse</td>
-<td>Topic navigation, status, and diagrams</td>
-</tr>
-<tr>
-<td>PDF</td>
-<td>Share a snapshot</td>
-<td>Subject volumes and source revision</td>
-</tr>
-</tbody></table>
-<p>Use the same TOD-DL identity, restrained color palette, and architecture
-language across the three formats. Keep the prose readable without color.
-Render diagrams with text labels and retain code blocks as selectable text.</p>
-<h3 id="existing-local-artifacts">Existing local artifacts</h3><p>The inspected workspace contains <code>specs/build-pdf.js</code>, HTML/PDF outputs,
-styles, and preview scripts. Those files are ignored by Git. They therefore
-cannot currently be treated as a reproducible publishing toolchain for a
-fresh clone.</p>
-<p>The inspected builder concatenates specs alphabetically and renders HTML
-and PDF through Puppeteer. Its cover uses <code>AegisFetch</code> and the blanket status
-<code>Approved / Active</code>; it loads diagram and highlighting resources from CDNs.
-Those labels do not reflect this repository&#39;s identity or per-spec statuses.
-The builder also treats a Mermaid render timeout as a non-fatal condition.
-A publication build must distinguish a document without diagrams from a
-failed diagram render.</p>
-<p>The next implementation can reuse the rendering approach after addressing
-these gaps. Preserve local experiments until a replacement is verified.</p>
-<h3 id="proposed-publication-gate">Proposed publication gate</h3><p>A published edition must make its source, scope, and render result reviewable.</p>
-<ol>
-<li>Track one builder and its exact dependency versions, including a lockfile.</li>
-<li>Bundle rendering assets locally so builds do not depend on mutable CDNs.</li>
-<li>Read titles and status text from the source specs. Do not infer approval.</li>
-<li>Group specs by subject and include a complete reference edition.</li>
-<li>Record the source commit and UTC build time in each edition.</li>
-<li>Validate internal links, anchors, diagrams, and code-block rendering.</li>
-<li>Check narrow-screen HTML, keyboard navigation, contrast, and printed PDF.</li>
-<li>Publish verified artifacts with the matching source revision.</li>
-</ol>
-<p>Keep generated PDFs, preview frames, and videos in release artifacts when
-that pipeline exists. Source specs and their history remain the authority.</p>
-<h2 id="next-steps">Next steps</h2><p>Use <a href="ARCHITECTURE">architecture</a> to find an implementation owner.
-Use <a href="#spec-OPEN-WORK">open work</a> to identify the next unfinished contract.</p>
-
-        </div>
-      </section>
-      <!-- SPECIFICATIONS_SECTION_END -->
-    </main>ww
     </main>
     <footer class="mono">
       <span>TOD-DL / Signal series</span>
