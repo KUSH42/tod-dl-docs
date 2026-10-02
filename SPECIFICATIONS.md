@@ -150,21 +150,20 @@ Render diagrams with text labels and retain code blocks as selectable text.
 
 ### Existing local artifacts
 
-The inspected workspace contains `specs/build-pdf.js`, HTML/PDF outputs,
-styles, and preview scripts. Those files are ignored by Git. They therefore
-cannot currently be treated as a reproducible publishing toolchain for a
-fresh clone.
+The source repository tracks artifact tooling under `.github/scripts/`.
+The directory contains the HTML/PDF builder, website section builder, GIF
+preview builder, tests, and exact dependency lockfile. Build instructions
+belong to `.github/scripts/README.md` in the source repository.
 
-The inspected builder concatenates specs alphabetically and renders HTML
-and PDF through Puppeteer. Its cover uses `AegisFetch` and the blanket status
-`Approved / Active`; it loads diagram and highlighting resources from CDNs.
-Those labels do not reflect this repository's identity or per-spec statuses.
-The builder also treats a Mermaid render timeout as a non-fatal condition.
-A publication build must distinguish a document without diagrams from a
-failed diagram render.
+The HTML/PDF builder reads specifications in filename order. It embeds syntax
+styles and rendered diagrams, preserves source status text, and verifies PDF
+contents page numbers. The Signal cover uses the complete canonical banner.
+Generated artifacts default to ignored `build/artifacts/`. The public docs
+repository holds selected published files and illustration inputs.
 
-The next implementation can reuse the rendering approach after addressing
-these gaps. Preserve local experiments until a replacement is verified.
+The old local builders and copied outputs are preserved in an external
+backup. Use the tracked builder for future artifact work. Its checks do not
+establish the complete publication gate below.
 
 ### Proposed publication gate
 

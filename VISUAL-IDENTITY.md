@@ -20,10 +20,10 @@ The following assets have distinct roles:
 
 - [Banner](assets/tod-dl-banner.svg): reusable static identity and canonical
   capture-mark geometry, in the `capture-mark` group.
-- `../tod-dl-docs/docs/assets/acquisition-motion-signal.html`: source
-  reference for the updated mark, screen layout, and animation choreography.
-- `../tod-dl-artifacts/designs/signal/output.html`: specification
-  artifact with the static mark embedded for offline use.
+- [Signal motion source](assets/acquisition-motion-signal.html): screen
+  layout and animation choreography.
+- `.github/scripts/build-html-pdf.js` in the source repository: specification
+  renderer with the complete static identity panel embedded for offline use.
 
 The reference establishes the palette, typography, and motion values below.
 Minimum sizes, clear space, and reading widths are recommendations derived
@@ -202,11 +202,11 @@ the HTML/PDF renderer. Do not add presentation markup to every specification.
 Preserve page numbering, internal links, selectable code, table headers, and
 safe page breaks. Do not let a large heading obscure a requirement.
 
-The local, Git-ignored `specs/build-pdf.js` reads the banner from
-`docs/assets/tod-dl-banner.svg` and embeds it as a data URL. Its remaining
-legacy template is not a complete Signal theme. The standalone Signal artifact
-embeds the capture geometry because it must remain usable offline. Compare
-that embedded geometry with the banner whenever the mark changes.
+The source repository's `.github/scripts/artifact-designs.js` reads the
+complete identity panel from `docs/assets/tod-dl-banner.svg`. The HTML/PDF
+builder embeds the panel for offline use. Its tests compare the emitted cover
+with the canonical banner. Build instructions belong to
+`.github/scripts/README.md` in the source repository.
 
 Use the banner as an image for ordinary documents. Inline the canonical group
 only when styling or a self-contained export requires it. Do not derive a
