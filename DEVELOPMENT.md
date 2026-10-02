@@ -2,8 +2,6 @@
 
 [Documentation](README.md) / Develop
 
-![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
-
 Start with the behavior contract and its owning component. The
 [architecture guide](ARCHITECTURE.md) maps responsibilities; the
 [specification guide](SPECIFICATIONS.md) groups the contracts by subject.
@@ -45,7 +43,10 @@ Follow the behavior from its entry point to the relevant tests.
 
 Patch helpers in their owning module when writing tests. For example, patch
 Tor helpers in `downloader.tor` and hash helpers in `downloader.util`.
-The CLI module is not their owner.
+The CLI module is not their owner. Read the
+[diagnostic classifier](../src/downloader/native_child.py) with the
+[diagnostic tests](../tests/test_native_transport_diagnostics.py) when
+changing native transport error reporting.
 
 ## Run focused checks
 
@@ -54,6 +55,12 @@ handover export:
 
 ```bash
 python3 -m unittest tests.test_export_handover -v
+```
+
+For native transport diagnostics:
+
+```bash
+python3 -m unittest tests.test_native_transport_diagnostics
 ```
 
 For deterministic canonicalization checks:
@@ -122,8 +129,20 @@ it does not repeat the engine selection evaluation. Read the
 [evaluation contract](../specs/SPEC-acquisition-tool-evaluation.md) before
 running engine scenarios.
 The [native evaluation adapter][native-evaluation] drives the current CLI.
-The complete native matrix and operator pilot remain unverified; historical
-aria2 reports do not establish native acceptance.
+Each adapter invocation retains the source files, Python runtime, and a
+validation report in the scenario directory. The report binds the parsed
+configuration through the session context owner's `configuration_record()`
+function. The adapter runs an import check before creating passing evidence.
+An explicit `--context-declaration` remains caller-owned. Import checks do
+not establish transfer, Tor routing, or resume acceptance. Fixture runs
+disable automatic resume-script creation in the source repository.
+The [context check report][context-check] records the startup fix and E01
+result.
+Fresh Tor source acquisitions passed signed-record and final-file
+verification. The [source evidence and next-agent handover][native-evidence]
+record the limits.
+Interrupted source resume and the complete native matrix remain unverified.
+Historical aria2 reports do not establish native acceptance.
 
 ## Maintain the documentation
 
@@ -142,6 +161,7 @@ Choose a behavior in [open work](../specs/OPEN-WORK.md), then read its spec,
 source owner, and tests before proposing an implementation.
 
 [native-evaluation]: ../src/evaluation/native_evaluation_adapter.py
+[context-check]: ../specs/reports/native-evaluation-context-2026-10-01.md
 [native-transfer]: ../src/downloader/native_transfer.py
 [native-ranges]: ../src/provenance/native_ranges.py
 [native-recovery]: ../src/downloader/native_recovery.py
@@ -167,4 +187,5 @@ source owner, and tests before proposing an implementation.
 [ref-15]: ../src/tod_dl.py
 [ref-16]: ../tests/test_control_launch_and_resume_script.py
 
-[banner]: assets/tod-dl-banner.svg
+[native-evidence]:
+  ../specs/reports/native-acquisition-handover-2026-10-01.md

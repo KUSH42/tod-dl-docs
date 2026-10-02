@@ -2,8 +2,6 @@
 
 [Documentation](README.md) / Project brief
 
-![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
-
 **Systems engineering for acquisition that can fail halfway through.**
 
 TOD-DL is a forensic acquisition portfolio project. It combines transfer
@@ -76,7 +74,9 @@ Review [native workers](../src/downloader/native_transfer.py),
 [recovery](../src/downloader/native_recovery.py), and
 [range tests](../tests/test_native_ranges.py). The
 [cutover contract][cutover] owns the requirements.
-Complete native acceptance and the operator pilot remain unverified.
+Fresh Tor acquisitions passed signed-record and final-file verification.
+The [source evidence and handover][native-evidence] record the limits.
+Interrupted source resume and complete native acceptance remain unverified.
 
 ### Keep the console outside acquisition authority
 
@@ -124,6 +124,11 @@ report states its method, date, and limits.
 - **External timestamps, September 24, 2026.** X01–X08 passed with a local
   authority and synthetic certificates. Read the [acceptance report]
   [timestamp-report].
+- **Native source acquisition, October 1, 2026.** Fresh EPS and JPEG
+  acquisitions passed signed-record and final-file verification. A separate
+  host still failed before response heads. Read the
+  [source evidence][native-evidence]. Interrupted source resume and the
+  complete native matrix remain unverified.
 - **Continuous integration.** The [CI workflow][ref-1] defines unit tests,
   syntax checks, and secret scanning. Inspect the actual run for its result.
 
@@ -159,10 +164,10 @@ A complete run accounts for every selected item; individual outcomes can
 include review, exclusion, or failure. External timestamps apply to signed
 artifacts and do not establish the time of every acquisition event.
 
-Native acceptance, the operator pilot, sealed-sidecar export, re-encryption,
-preservation profiles, and parts of transport integration remain open. The
-[specification guide](SPECIFICATIONS.md) links the relevant contracts without
-treating planned behavior as available.
+Native acceptance, interrupted source resume, sealed-sidecar export,
+re-encryption, preservation profiles, and parts of transport integration
+remain open. The [specification guide](SPECIFICATIONS.md) links the relevant
+contracts without treating planned behavior as available.
 
 ## Next steps
 
@@ -181,4 +186,6 @@ For use permissions, read the [license](../LICENSE).
 [motion]: assets/acquisition-motion.gif
 [motion-still]: assets/acquisition-motion.png
 [motion-page]: assets/acquisition-motion.html
-[banner]: assets/tod-dl-banner.svg
+
+[native-evidence]:
+  ../specs/reports/native-acquisition-handover-2026-10-01.md

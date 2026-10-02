@@ -120,8 +120,12 @@ These contracts define how transfer engines are tested against local fixtures.
 The [project brief](PORTFOLIO-OVERVIEW.md#validation-evidence) links selected
 reports with dates and limits. Browse [all reports](../specs/reports/) when
 reviewing a specific acceptance gate. Native cutover requires its complete
-matrix and operator pilot. Historical aria2 evaluation does not establish
-native acceptance.
+matrix and interrupted-resume operator pilot. Historical aria2 evaluation
+does not establish native acceptance.
+
+The [October 1 native handover][native-evidence] links the failed
+source pilot, successful full acquisitions, and diagnostic retry. Read those
+reports together; each report states its source scope and verification limits.
 
 ## Publication proposal
 
@@ -185,4 +189,5 @@ Use [open work](../specs/OPEN-WORK.md) to identify the next unfinished contract.
 
 [ref-1]: ../specs/SPEC-acquisition-evaluation-infrastructure.md
 
-[banner]: assets/tod-dl-banner.svg
+[native-evidence]:
+  ../specs/reports/native-acquisition-handover-2026-10-01.md

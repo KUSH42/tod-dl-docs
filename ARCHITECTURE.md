@@ -2,8 +2,6 @@
 
 [Documentation](README.md) / Architecture
 
-![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
-
 TOD-DL separates acquisition authority, operator interaction, and independent
 verification. SQLite owns recovery state. Signed artifacts provide the
 exportable history. The console observes published state and requests
@@ -94,7 +92,10 @@ authenticated prefix. [Native cutover][cutover] owns these rules.
 
 The active controller refuses retired engines and incompatible schema pins
 before runtime writes or source contact. Archived runs need matching retained
-builds. Complete native acceptance and the operator pilot remain unverified.
+builds. Fresh Tor acquisitions passed signed-record and final-file
+verification; the [source evidence and handover][native-evidence] record the
+scope.
+Interrupted source resume and complete native acceptance remain unverified.
 
 Descriptor components use item identities and a separate streaming adapter.
 Do not infer public support from an adapter test. `run_locked()` in
@@ -145,4 +146,5 @@ Use the [specification guide](SPECIFICATIONS.md) to trace an exact contract.
 [ref-14]: ../src/evaluation/
 [ref-15]: OPERATOR-GUIDE.md#monitor-and-control-a-run
 
-[banner]: assets/tod-dl-banner.svg
+[native-evidence]:
+  ../specs/reports/native-acquisition-handover-2026-10-01.md

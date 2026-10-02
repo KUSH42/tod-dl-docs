@@ -2,8 +2,6 @@
 
 [Documentation](README.md) / Operate
 
-![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
-
 Use this guide to prepare, run, resume, verify, and export a bounded
 acquisition. Commands run from the repository root and use placeholder case
 paths. Use only material you are authorized to acquire and retain.
@@ -11,8 +9,10 @@ paths. Use only material you are authorized to acquire and retain.
 TOD-DL remains a portfolio project with open validation work. Start with
 queue validation. Review the [current limits][open-work] before source
 contact. Public descriptor acquisition remains unavailable. URL queues use
-native transfer; the complete native acceptance matrix and operator pilot
-remain unverified. The [cutover contract][cutover] owns current resume and
+native transfer. Fresh Tor acquisitions passed signed-record and final-file
+verification; see the [source evidence and handover][native-evidence].
+Interrupted source resume and the complete native acceptance matrix remain
+unverified. The [cutover contract][cutover] owns current resume and
 compatibility rules.
 
 ## Requirements
@@ -168,6 +168,25 @@ queue's selected items resolve to more than one route kind (for example, an
 `.onion` item mixed with a clearnet `route=direct` item), the controller refuses
 to start until the operator passes `--allow-mixed-routes`, so a mixed selection
 is never a silent surprise.
+
+## Diagnose native transport failures
+
+Read the fixed `diagnostic` code in the console or retained SQLite error.
+The [native transport classifier](../src/downloader/native_child.py) owns
+the values. The [native engine contract][native-contract] owns diagnostic
+behavior.
+
+`connection_timeout` identifies a parent deadline before an HTTP response
+head. It does not establish whether child startup, Tor connection, onion
+reachability, or the source response caused the wait. Signed attempt records
+can have no response observation; SQLite diagnostic text is separate evidence.
+Raw stderr and exception text do not enter the diagnostic code.
+
+Compare the exact host and path of failed and working URLs before another
+pilot. A successful transfer from a different host does not establish
+reachability of the failed host. Read the [source evidence and
+handover][native-evidence] before choosing the
+next bounded pilot.
 
 ## Recover from low storage
 
@@ -388,7 +407,8 @@ compatible native runs. These rules apply to a version 2 run:
   pending submission does not provide external time assurance.
 - Native URL queues support HTTP, HTTPS, Tor, direct routes, and configured
   HTTP proxies. Descriptor acquisition remains blocked independently of URL
-  queue support. Native acceptance and the operator pilot remain unverified.
+  queue support. Interrupted source resume and complete native acceptance
+  remain unverified; see the [source evidence and handover][native-evidence].
 - Each run has its own state directory, so a `generation=` change from a
   later run cannot start an early recheck of an `unavailable` item.
 - When every selected item has a terminal outcome, the controller closes
@@ -679,4 +699,7 @@ Use the [audit guide](AUDIT-RAIL.md) to interpret verification results.
 [transport]: ../specs/SPEC-http-transport.md
 [sealed]: ../specs/SPEC-sealed-multi-recipient.md
 
-[banner]: assets/tod-dl-banner.svg
+[native-evidence]:
+  ../specs/reports/native-acquisition-handover-2026-10-01.md
+
+[native-contract]: ../specs/SPEC-native-transfer-engine.md
