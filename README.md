@@ -143,7 +143,7 @@ linked above is a separate artifact and uses the Signal design.
 Start with the [project brief][brief], then follow the guide for the
 engineering question you want to review.
 
-[banner]: assets/tod-dl-banner.svg
+[banner]: assets/tod-dl-banner-animated.gif
 [brief]: PORTFOLIO-OVERVIEW.md
 [architecture]: ARCHITECTURE.md
 [operate]: OPERATOR-GUIDE.md
