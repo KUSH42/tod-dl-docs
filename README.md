@@ -1,155 +1,139 @@
-# TOD-DL documentation
+# TOD-DL
 
-[Repository](../README.md) / Documentation
+[Repository](https://github.com/KUSH42/tod-dl-docs) / Documentation
 
-![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
+![TOD-DL: Acquire. Preserve. Verify.][banner]
 
-TOD-DL combines resumable acquisition, durable recovery, and signed custody
-records. These guides explain how to use the software and how to evaluate
-its engineering. URL queues use the native engine. Protected resume requires
-an authenticated, reread prefix and strong ETag or trusted-checksum protection.
-The complete native acceptance matrix and operator pilot remain unverified.
+**Bounded native acquisition with durable recovery and signed provenance.**
 
-## Find your starting point
+TOD-DL stands for *Tor Onion Dump Downloader*. The project acquires a bounded
+set of files from unreliable sources, including Tor onion services. It
+preserves existing final files, recovers interrupted work, and records signed
+provenance for independent verification.
 
-Choose a guide by the question you need to answer.
+This public repository presents the project through engineering guides,
+visual demonstrations, and selected specification artifacts. The source code
+and complete specification set remain private. The material here explains
+project design and scope; it does not provide an installable downloader.
 
-| Question | Guide |
+[Project brief][brief] · [Architecture][architecture] ·
+[Operator guide][operate] · [Specification demo][demo-pdf]
+
+## The engineering problem
+
+A successful HTTP response does not finish an acquisition. The controller
+must also handle a changed remote file, a full disk, a process crash, and an
+existing destination. A reviewer needs to distinguish retained bytes,
+recorded observations, and verified claims.
+
+TOD-DL addresses these conditions through explicit boundaries:
+
+- **Bounded scope.** A run keeps its selected set across retries and resume.
+- **Durable recovery.** SQLite records state transitions and promotion intent.
+  Recovery reconciles interrupted work with the filesystem.
+- **Evidence preservation.** Exclusive final-file creation protects existing
+  files. Conflicts retain incoming bytes for review.
+- **Verifiable history.** Signed records connect sessions, outcomes, retained
+  inputs, and final-file digests.
+- **Separate observation and control.** The console reads published telemetry.
+  Confirmed commands reach the acquisition controller through a local socket.
+- **Independent review.** Read-only verification checks retained artifacts
+  against external trust material.
+
+The [architecture guide][architecture] explains component boundaries. The
+[chain of custody guide][custody] follows acquired bytes through finalization
+and verification.
+
+## Explore the project
+
+Choose the guide that answers your question.
+
+| Goal | Read |
 | --- | --- |
-| What problem does the project solve? | [Project brief][ref-1] |
-| What engineering decisions can I review? | [Design and evidence][ref-2] |
-| How do I run, resume, and verify an acquisition? | [Operator guide][ref-3] |
-| Which component owns each responsibility? | [Architecture](ARCHITECTURE.md) |
-| How do I work on the code? | [Development](DEVELOPMENT.md) |
-| How do signed records establish a verifiable history? | [Audit rail][ref-4] |
-| How do bytes move into a verified handover? | [Chain of custody][ref-5] |
-| Which specification owns a behavior? | [Specification guide][ref-6] |
-| How do I style websites and documents? | [Visual identity][ref-7] |
+| Understand the problem and project scope | [Project brief][brief] |
+| Review engineering tradeoffs | [Design decisions][decisions] |
+| Follow acquisition and recovery | [Operator guide][operate] |
+| Understand component responsibilities | [Architecture][architecture] |
+| Assess signed records and trust limits | [Audit rail][audit] |
+| Follow bytes into a verified handover | [Chain of custody][custody] |
+| Understand the development approach | [Development guide][develop] |
+| Explore the contract structure | [Specification guide][specs] |
+| Review the visual system | [Visual identity][identity] |
 
-## Read at three depths
+The guides include references to private source files, tests, specifications,
+and reports. Those references describe the engineering context; their targets
+are not included in this public repository.
 
-The documentation offers three levels without requiring a full spec read.
+## View the demonstrations
 
-1. Read the [project brief](PORTFOLIO-OVERVIEW.md) for the problem, design
-   choices, and validation evidence.
-2. Follow the [architecture](ARCHITECTURE.md) or [custody walkthrough]
-   (CHAIN-OF-CUSTODY.md) for component boundaries and failure behavior.
-3. Open the relevant [specification](SPECIFICATIONS.md), source file, and
-   test when you need the exact contract.
+The visual demonstrations use synthetic content. They illustrate the design
+and do not establish source authenticity or acquisition acceptance.
 
-## Understand the evidence
+![Synthetic points form a file and linked provenance records.][motion]
 
-Guides explain the implementation. Specifications own behavior contracts.
-Their `Status:` lines state implementation progress. Dated reports record
-what a particular validation run checked.
+Open the [interactive acquisition illustration][motion-page] or the
+[static illustration][motion-still]. Download the interactive HTML and open
+it in a browser to use its controls.
 
-A passing historical report does not establish that the current checkout
-passes. A partially implemented specification can describe both available
-behavior and planned extensions. [Open work](../specs/OPEN-WORK.md) names
-remaining gaps; the linked spec defines the requirement. The
-[native cutover contract](../specs/SPEC-native-engine-cutover.md) owns current
-resume, retirement, and compatibility rules. Historical aria2 reports describe
-the earlier engine. Non-active version 2 schemas require their matching
-retained build.
+The specification demo contains **five specifications**, rather than the
+complete private set. It presents the document design, linked contents,
+rendered diagrams, and PDF navigation.
 
-## Next steps
+- [Download the five-specification PDF][demo-pdf].
+- [Download the companion HTML][demo-html] and open it in a browser.
+- [View the project presentation HTML][presentation] by downloading the file
+  and opening it in a browser.
 
-Start with the [project brief](PORTFOLIO-OVERVIEW.md), or open the
-[operator guide](OPERATOR-GUIDE.md) when you have an authorized case to run.
+## Current scope and evidence
 
-[ref-1]: PORTFOLIO-OVERVIEW.md
-[ref-2]: PORTFOLIO-OVERVIEW.md#engineering-decisions
-[ref-3]: OPERATOR-GUIDE.md
-[ref-4]: AUDIT-RAIL.md
-[ref-5]: CHAIN-OF-CUSTODY.md
-[ref-6]: SPECIFICATIONS.md
-[ref-7]: VISUAL-IDENTITY.md
+TOD-DL remains a portfolio project under active development. URL queues use
+the native transfer engine. Protected continuation requires authenticated,
+reread prefix bytes and a strong ETag or trusted expected checksum. Weak or
+missing ETags alone cannot protect continuation.
 
-# Specification artifacts
+The operator guide records successful fresh Tor acquisitions with signed
+record and final-file verification. Interrupted source resume, the complete
+native acceptance matrix, and the operator pilot remain unverified.
+Descriptor acquisition remains blocked in the public CLI.
 
-`build-html-pdf.js` owns the HTML and PDF presentation for this renderer.
-It reads sorted `SPEC*.md` files and writes `output.html` and
-`combined_output.pdf`. The PDF includes bookmarks and linked contents with
-page numbers taken from the rendered PDF destinations.
+Specifications define behavior contracts. Their status lines distinguish
+implemented behavior from planned work. Dated reports establish evidence
+for their stated scope; historical results do not certify a current build.
+The [project brief][brief] explains validation evidence and project limits.
+The public demo does not publish the complete acceptance evidence.
 
-## Select a design
+## About this repository
 
-Change one string near the top of `build-html-pdf.js`, then rebuild:
+This repository contains public documentation and presentation artifacts.
+The [operator guide][operate] explains workflows for the separate downloader.
+The [development guide][develop] describes work in the private source
+repository. Commands and source paths in those guides require that checkout.
 
-```js
-const DESIGN = 'signal';
-```
+The local artifact builder supports full and limited document builds. Run
+`node build-html-pdf.js --max-specs 5` to select up to five specifications in
+filename order. The builder defaults to `./build/` and writes
+`output_<design>.html` and `combined_output_<design>.pdf`. Its current design
+is `folio`, selected by `DESIGN` in `build-html-pdf.js`. A build requires the
+private specification inputs and the dependencies in `package.json`.
+Generated files in `build/` are ignored by Git. The published five-spec demo
+linked above is a separate artifact and uses the Signal design.
 
-Choose one of these names. `signal` is the default.
-
-| Name | Design |
-| --- | --- |
-| `signal` | Vermilion artwork, oversized type, and an editorial grid. |
-| `atlas` | Midnight blue, cyan diagrams, and technical typography. |
-| `folio` | Warm paper, serif titles, and engraved linework. |
-| `copper` | The preserved ink-and-copper design from the first revision. |
-
-The selection applies to the cover, contents, specification pages, syntax
-colors, and diagrams. `artifact-designs.js` owns the palettes, cover artwork,
-and design-specific styles. The build script owns shared layout and page
-geometry. An unknown design name fails the build.
-
-## Build
-
-Use the Node version required by `package.json`. Install the locked packages
-from this directory. Puppeteer installs its matching browser during setup.
-
-```bash
-npm ci
-```
-
-Pass the specification directory and an output directory outside the source
-repository. Existing artifacts with the same names are replaced after a
-successful render.
-
-```bash
-node build-html-pdf.js ../../specs /tmp/tod-dl-artifacts
-```
-
-Without arguments, the script reads and writes the current directory. The
-saved HTML embeds syntax colors and rendered Mermaid diagrams. Its contents
-numbers refer to the companion PDF, including the cover and contents pages.
-Implementation status comes from each source specification.
-
-## Preview and check
-
-Run the renderer tests. Every design uses the same synthetic specifications
-and temporary paths. The tests check page numbers, heading links, cover fit,
-offline diagrams, and mobile width. No downloader process or source request
-runs.
-
-```bash
-npm test
-```
-
-Use Poppler's `pdftoppm` to make PNG previews from the actual PDF pages.
-Install Poppler separately if the command is unavailable.
-
-```bash
-pdftoppm -f 1 -l 2 -scale-to 1600 -png \
-  /tmp/tod-dl-artifacts/combined_output.pdf /tmp/tod-dl-artifacts/preview
-```
-
-The existing GIF scripts can consume the same artifact names. Run those
-scripts from the output directory with their existing prerequisites.
-
-## Preserve print geometry
-
-`build-html-pdf.js` owns the page geometry and print options. Keep its
-Puppeteer margins at zero and its header/footer insertion through CSS page
-margin boxes. The separate CSS page margins must also remain unchanged.
-
-The contents reserve a fixed column for page numbers. The build renders the
-PDF, fills the numbers, and renders again. It writes artifacts only after the
-page destinations stabilize. A missing destination or unstable pagination
-fails the build.
-
-`../../specs/build-pdf.js` is a separate copy of the older renderer. Use
-`build-html-pdf.js` for this design; the older copy does not share its styles.
+Start with the [project brief][brief], then follow the guide for the
+engineering question you want to review.
 
 [banner]: assets/tod-dl-banner.svg
+[brief]: PORTFOLIO-OVERVIEW.md
+[architecture]: ARCHITECTURE.md
+[operate]: OPERATOR-GUIDE.md
+[decisions]: PORTFOLIO-OVERVIEW.md#engineering-decisions
+[develop]: DEVELOPMENT.md
+[audit]: AUDIT-RAIL.md
+[custody]: CHAIN-OF-CUSTODY.md
+[specs]: SPECIFICATIONS.md
+[identity]: VISUAL-IDENTITY.md
+[motion]: assets/acquisition-motion.gif
+[motion-page]: assets/acquisition-motion-signal.html
+[motion-still]: assets/acquisition-motion.png
+[demo-pdf]: tor-dl-tech-specs.pdf
+[demo-html]: tor-dl-tech-specs.html
+[presentation]: tor-dl-web.html
