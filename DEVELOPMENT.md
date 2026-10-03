@@ -2,6 +2,8 @@
 
 [Documentation](README.md) / Develop
 
+![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
+
 Start with the behavior contract and its owning component. The
 [architecture guide](ARCHITECTURE.md) maps responsibilities; the
 [specification guide](SPECIFICATIONS.md) groups the contracts by subject.
@@ -170,6 +172,9 @@ source owner, and tests before proposing an implementation.
 [recovery-tests]: ../tests/test_native_recovery.py
 [cutover-tests]: ../tests/test_native_cutover.py
 [cutover]: ../specs/SPEC-native-engine-cutover.md
+[banner]: assets/tod-dl-banner.gif
+[native-evidence]:  ../specs/reports/native-acquisition-handover-2026-10-01.md
+
 [ref-1]: ../src/downloader/core.py
 [ref-2]: ../tests/test_tod_dl.py
 [ref-3]: ../src/downloader/storage.py
@@ -187,5 +192,3 @@ source owner, and tests before proposing an implementation.
 [ref-15]: ../src/tod_dl.py
 [ref-16]: ../tests/test_control_launch_and_resume_script.py
 
-[native-evidence]:
-  ../specs/reports/native-acquisition-handover-2026-10-01.md

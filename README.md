@@ -2,7 +2,7 @@
 
 [Repository](https://github.com/KUSH42/tod-dl-docs) / Documentation
 
-![TOD-DL: Acquire. Preserve. Verify.][banner]
+![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
 
 **Bounded native acquisition with durable recovery and signed provenance.**
 

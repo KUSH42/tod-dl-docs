@@ -200,6 +200,7 @@ Use [verification and export commands][operate] for an actual case.
 Read [open work][open-work] before treating a planned claim as implemented.
 
 [cutover]: ../specs/SPEC-native-engine-cutover.md
+[banner]: assets/tod-dl-banner.gif
 [custody]: ../specs/SPEC-run-custody.md
 [legacy]: ../specs/SPEC-acquisition-provenance.md
 [operate]: OPERATOR-GUIDE.md#verify-provenance
@@ -209,9 +210,7 @@ Read [open work][open-work] before treating a planned claim as implemented.
 [evolution]: ../specs/SPEC-manifest-v2-evolution.md
 [open-work]: ../specs/OPEN-WORK.md
 [timestamp]: ../specs/SPEC-external-timestamping.md
-[timestamp-report]:
-  ../specs/reports/external-timestamping-acceptance-2026-09-24.md
+[timestamp-report]: ../specs/reports/external-timestamping-acceptance-2026-09-24.md
 [sealed-export]: ../specs/SPEC-sealed-sidecar-handover.md
 [sealed-multi]: ../specs/SPEC-sealed-multi-recipient.md
-
 [banner]: assets/tod-dl-banner.svg
