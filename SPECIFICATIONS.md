@@ -189,6 +189,6 @@ Use [architecture](ARCHITECTURE.md) to find an implementation owner.
 Use [open work](../specs/OPEN-WORK.md) to identify the next unfinished contract.
 
 [native-evidence]: ../specs/reports/native-acquisition-handover-2026-10-01.md
-[banner]: assets/tod-dl-banner.gif
+[banner]: assets/tod-dl-banner-animated.gif
 [ref-1]: ../specs/SPEC-acquisition-evaluation-infrastructure.md
 
