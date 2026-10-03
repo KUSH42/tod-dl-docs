@@ -185,5 +185,5 @@ For use permissions, read the [license](../LICENSE).
 [motion]: assets/acquisition-motion.gif
 [motion-still]: assets/acquisition-motion.png
 [motion-page]: assets/acquisition-motion-signal.html
-[banner]: assets/tod-dl-banner.gif
+[banner]: assets/tod-dl-banner-animated.gif
 [native-evidence]: ../specs/reports/native-acquisition-handover-2026-10-01.md
