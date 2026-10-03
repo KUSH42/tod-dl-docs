@@ -225,4 +225,4 @@ Check the final rendered format before publishing it.
 6. Check that text separates byte integrity, record authentication, and source
    authenticity. Do not imply completed acceptance from a brand illustration.
 
-   [banner]: assets/tod-dl-banner.gif
+   [banner]: assets/tod-dl-banner-animated.gif
