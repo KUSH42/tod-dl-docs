@@ -182,7 +182,7 @@ Read the [audit rail](AUDIT-RAIL.md) for authentication and trust limits.
 
 [cutover]: ../specs/SPEC-native-engine-cutover.md
 [native-tests]: ../tests/test_native_recovery.py
-[banner]: assets/tod-dl-banner.gif
+[banner]: assets/tod-dl-banner-animated.gif
 [custody]: ../specs/SPEC-run-custody.md
 [reliable]: ../specs/SPEC-reliable-acquisition.md
 [transport]: ../specs/SPEC-http-transport.md
