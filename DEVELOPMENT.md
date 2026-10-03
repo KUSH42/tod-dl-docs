@@ -172,7 +172,7 @@ source owner, and tests before proposing an implementation.
 [recovery-tests]: ../tests/test_native_recovery.py
 [cutover-tests]: ../tests/test_native_cutover.py
 [cutover]: ../specs/SPEC-native-engine-cutover.md
-[banner]: assets/tod-dl-banner.gif
+[banner]: assets/tod-dl-banner-animated.gif
 [native-evidence]:  ../specs/reports/native-acquisition-handover-2026-10-01.md
 
 [ref-1]: ../src/downloader/core.py
