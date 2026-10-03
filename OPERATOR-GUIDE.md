@@ -695,7 +695,7 @@ Response values outside the safe list are redacted. The
 Follow the [custody walkthrough](CHAIN-OF-CUSTODY.md) when reviewing a run.
 Use the [audit guide](AUDIT-RAIL.md) to interpret verification results.
 
-[banner]: assets/tod-dl-banner.gif
+[banner]: assets/tod-dl-banner-animated.gif
 [schemas]: ../src/provenance/schemas/registry.json
 [open-work]: ../specs/OPEN-WORK.md
 [case]: #prepare-the-case-and-context
