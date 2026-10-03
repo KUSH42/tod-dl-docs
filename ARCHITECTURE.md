@@ -127,7 +127,7 @@ Use the [specification guide](SPECIFICATIONS.md) to trace an exact contract.
 [inventory]: ../specs/SPEC-inventory-snapshot-manifest.md
 [transport]: ../specs/SPEC-http-transport.md
 [evaluation]: ../specs/SPEC-acquisition-evaluation-infrastructure.md
-[banner]: assets/tod-dl-banner.gif
+[banner]: assets/tod-dl-banner-animated.gif
 
 [ref-1]: ../src/tod_dl.py
 [ref-2]: ../src/downloader/core.py
