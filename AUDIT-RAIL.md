@@ -200,7 +200,7 @@ Use [verification and export commands][operate] for an actual case.
 Read [open work][open-work] before treating a planned claim as implemented.
 
 [cutover]: ../specs/SPEC-native-engine-cutover.md
-[banner]: assets/tod-dl-banner.gif
+[banner]: assets/tod-dl-banner-animated.gif
 [custody]: ../specs/SPEC-run-custody.md
 [legacy]: ../specs/SPEC-acquisition-provenance.md
 [operate]: OPERATOR-GUIDE.md#verify-provenance
