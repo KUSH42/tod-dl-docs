@@ -135,7 +135,7 @@ The local artifact builder supports full and limited document builds. Run
 `node build-html-pdf.js --max-specs 5` to select up to five specifications in
 filename order. The builder defaults to `./build/` and writes
 `output_<design>.html` and `combined_output_<design>.pdf`. Its current design
-is `folio`, selected by `DESIGN` in `build-html-pdf.js`. A build requires the
+is `signal`, selected by `DESIGN` in `build-html-pdf.js`. A build requires the
 private specification inputs and the dependencies in `package.json`.
 Generated files in `build/` are ignored by Git. The published five-spec demo
 linked above is a separate artifact and uses the Signal design.
