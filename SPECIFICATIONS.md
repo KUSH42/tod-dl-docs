@@ -2,8 +2,6 @@
 
 [Documentation](README.md) / Specifications
 
-![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
-
 Use the specifications as an engineering reference library. Start with a
 system concern, then follow its contract to source, tests, and dated reports.
 For an introduction, read the [project brief](PORTFOLIO-OVERVIEW.md).
@@ -30,6 +28,14 @@ These contracts define selection, transfer, storage, and interruption handling.
   engine retirement, compatibility, and the current acceptance gate.
 - [Reliable acquisition](../specs/SPEC-reliable-acquisition.md): selection,
   retries, resource admission, validation, and finalization.
+- [Dynamic worker limits](../specs/SPEC-dynamic-worker-limits.md): live
+  fixed and automatic worker limits and their monitor controls.
+- [Parallel ranges](../specs/SPEC-automatic-parallel-ranges.md): bounded
+  parallel requests, private segments, assembly, and restart recovery.
+- [Non-forensic downloads](../specs/SPEC-non-forensic-downloads.md): the
+  unsigned download mode, mode separation, and the ETag override.
+- [Storage preflight](../specs/SPEC-local-storage-preflight.md): local
+  storage eligibility and mount checks before startup writes.
 - [Fault recovery](../specs/SPEC-acquisition-fault-recovery.md): required
   failure cases and assertions.
 - [HTTP transport](../specs/SPEC-http-transport.md): descriptors, route policy,
@@ -118,6 +124,8 @@ These contracts define how transfer engines are tested against local fixtures.
   and engine-selection criteria.
 - [Evaluation infrastructure][ref-1]:
   fixture generation, failure injection, and measurement.
+- [CI coverage](../specs/SPEC-ci-python-coverage.md): Python line and branch
+  coverage reports for the CI test job.
 
 The [project brief](PORTFOLIO-OVERVIEW.md#validation-evidence) links selected
 reports with dates and limits. Browse [all reports](../specs/reports/) when
@@ -188,7 +196,7 @@ that pipeline exists. Source specs and their history remain the authority.
 Use [architecture](ARCHITECTURE.md) to find an implementation owner.
 Use [open work](../specs/OPEN-WORK.md) to identify the next unfinished contract.
 
-[native-evidence]: ../specs/reports/native-acquisition-handover-2026-10-01.md
-[banner]: assets/tod-dl-banner.gif
 [ref-1]: ../specs/SPEC-acquisition-evaluation-infrastructure.md
 
+[native-evidence]:
+  ../specs/reports/native-acquisition-handover-2026-10-01.md

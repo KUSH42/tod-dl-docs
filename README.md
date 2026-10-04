@@ -1,20 +1,32 @@
-# TOD-DL
+# TOD-DL documentation
 
-[Repository](https://github.com/KUSH42/tod-dl-docs) / Documentation
+[Repository](../README.md) / Documentation
 
 ![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
 
-**Bounded native acquisition with durable recovery and signed provenance.**
+TOD-DL combines resumable acquisition, durable recovery, and signed custody
+records. These guides explain how to use the software and how to evaluate
+its engineering. URL queues use the native engine. Protected resume requires
+an authenticated, reread prefix and strong ETag or trusted-checksum protection.
+Fresh Tor acquisitions passed signed-record and final-file verification.
+See the [source evidence and handover][native-evidence]. Interrupted source
+resume and the complete native acceptance matrix remain unverified.
 
-TOD-DL stands for *Tor Onion Dump Downloader*. The project acquires a bounded
-set of files from unreliable sources, including Tor onion services. It
-preserves existing final files, recovers interrupted work, and records signed
-provenance for independent verification.
+## Find your starting point
 
-This public repository presents the project through engineering guides,
-visual demonstrations, and selected specification artifacts. The source code
-and complete specification set remain private. The material here explains
-project design and scope; it does not provide an installable downloader.
+Choose a guide by the question you need to answer.
+
+| Question | Guide |
+| --- | --- |
+| What problem does the project solve? | [Project brief][ref-1] |
+| What engineering decisions can I review? | [Design and evidence][ref-2] |
+| How do I run, resume, and verify an acquisition? | [Operator guide][ref-3] |
+| Which component owns each responsibility? | [Architecture](ARCHITECTURE.md) |
+| How do I work on the code? | [Development](DEVELOPMENT.md) |
+| How do signed records establish a verifiable history? | [Audit rail][ref-4] |
+| How do bytes move into a verified handover? | [Chain of custody][ref-5] |
+| Which specification owns a behavior? | [Specification guide][ref-6] |
+| How do I style websites and documents? | [Visual identity][ref-7] |
 
 ## Read at three depths
 
@@ -25,8 +37,8 @@ The documentation offers three levels without requiring a full spec read.
 2. Follow the [architecture](ARCHITECTURE.md) or
    [custody walkthrough](CHAIN-OF-CUSTODY.md) for component boundaries and
    failure behavior.
-3. Read the [specification guide](SPECIFICATIONS.md) for contract structure
-   and references to the private source, tests, and specifications.
+3. Open the relevant [specification](SPECIFICATIONS.md), source file, and
+   test when you need the exact contract.
 
 ## Understand the evidence
 
@@ -36,126 +48,26 @@ what a particular validation run checked.
 
 A passing historical report does not establish that the current checkout
 passes. A partially implemented specification can describe both available
-behavior and planned extensions. The [project brief][brief] explains the
-validation scope and remaining gaps. Historical aria2 reports describe the
-earlier engine. Non-active version 2 schemas require their matching retained
-build.
+behavior and planned extensions. [Open work](../specs/OPEN-WORK.md) names
+remaining gaps; the linked spec defines the requirement. The
+[native cutover contract](../specs/SPEC-native-engine-cutover.md) owns current
+resume, retirement, and compatibility rules. Historical aria2 reports describe
+the earlier engine. Non-active version 2 schemas require their matching
+retained build.
 
-## The engineering problem
+## Next steps
 
-A successful HTTP response does not finish an acquisition. The controller
-must also handle a changed remote file, a full disk, a process crash, and an
-existing destination. A reviewer needs to distinguish retained bytes,
-recorded observations, and verified claims.
+Start with the [project brief](PORTFOLIO-OVERVIEW.md), or open the
+[operator guide](OPERATOR-GUIDE.md) when you have an authorized case to run.
 
-TOD-DL addresses these conditions through explicit boundaries:
+[ref-1]: PORTFOLIO-OVERVIEW.md
+[ref-2]: PORTFOLIO-OVERVIEW.md#engineering-decisions
+[ref-3]: OPERATOR-GUIDE.md
+[ref-4]: AUDIT-RAIL.md
+[ref-5]: CHAIN-OF-CUSTODY.md
+[ref-6]: SPECIFICATIONS.md
+[ref-7]: VISUAL-IDENTITY.md
+[banner]: assets/tod-dl-banner.svg
 
-- **Bounded scope.** A run keeps its selected set across retries and resume.
-- **Durable recovery.** SQLite records state transitions and promotion intent.
-  Recovery reconciles interrupted work with the filesystem.
-- **Evidence preservation.** Exclusive final-file creation protects existing
-  files. Conflicts retain incoming bytes for review.
-- **Verifiable history.** Signed records connect sessions, outcomes, retained
-  inputs, and final-file digests.
-- **Separate observation and control.** The console reads published telemetry.
-  Confirmed commands reach the acquisition controller through a local socket.
-- **Independent review.** Read-only verification checks retained artifacts
-  against external trust material.
-
-The [architecture guide][architecture] explains component boundaries. The
-[chain of custody guide][custody] follows acquired bytes through finalization
-and verification.
-
-## Explore the project
-
-Choose the guide that answers your question.
-
-| Goal | Read |
-| --- | --- |
-| Understand the problem and project scope | [Project brief][brief] |
-| Review engineering tradeoffs | [Design decisions][decisions] |
-| Follow acquisition and recovery | [Operator guide][operate] |
-| Understand component responsibilities | [Architecture][architecture] |
-| Assess signed records and trust limits | [Audit rail][audit] |
-| Follow bytes into a verified handover | [Chain of custody][custody] |
-| Understand the development approach | [Development guide][develop] |
-| Explore the contract structure | [Specification guide][specs] |
-| Review the visual system | [Visual identity][identity] |
-
-The guides include references to private source files, tests, specifications,
-and reports. Those references describe the engineering context; their targets
-are not included in this public repository.
-
-## View the demonstrations
-
-The visual demonstrations use synthetic content. They illustrate the design
-and do not establish source authenticity or acquisition acceptance.
-
-![Synthetic points form a file and linked provenance records.][motion]
-
-Open the [interactive acquisition illustration][motion-page] or the
-[static illustration][motion-still]. Download the interactive HTML and open
-it in a browser to use its controls.
-
-The specification demo contains **five specifications**, rather than the
-complete private set. It presents the document design, linked contents,
-rendered diagrams, and PDF navigation.
-
-- [Download the five-specification PDF][demo-pdf].
-- [Download the companion HTML][demo-html] and open it in a browser.
-- [View the project presentation HTML][presentation] by downloading the file
-  and opening it in a browser.
-
-## Current scope and evidence
-
-TOD-DL remains a portfolio project under active development. URL queues use
-the native transfer engine. Protected continuation requires authenticated,
-reread prefix bytes and a strong ETag or trusted expected checksum. Weak or
-missing ETags alone cannot protect continuation.
-
-The operator guide records successful fresh Tor acquisitions with signed
-record and final-file verification. Interrupted source resume, the complete
-native acceptance matrix, and the operator pilot remain unverified.
-Descriptor acquisition remains blocked in the public CLI.
-
-Specifications define behavior contracts. Their status lines distinguish
-implemented behavior from planned work. Dated reports establish evidence
-for their stated scope; historical results do not certify a current build.
-The [project brief][brief] explains validation evidence and project limits.
-The public demo does not publish the complete acceptance evidence.
-
-## About this repository
-
-This repository contains public documentation and presentation artifacts.
-The [operator guide][operate] explains workflows for the separate downloader.
-The [development guide][develop] describes work in the private source
-repository. Commands and source paths in those guides require that checkout.
-
-The local artifact builder supports full and limited document builds. Run
-`node build-html-pdf.js --max-specs 5` to select up to five specifications in
-filename order. The builder defaults to `./build/` and writes
-`output_<design>.html` and `combined_output_<design>.pdf`. Its current design
-is `signal`, selected by `DESIGN` in `build-html-pdf.js`. A build requires the
-private specification inputs and the dependencies in `package.json`.
-Generated files in `build/` are ignored by Git. The published five-spec demo
-linked above is a separate artifact and uses the Signal design.
-
-Start with the [project brief][brief], then follow the guide for the
-engineering question you want to review.
-
-[banner]: assets/tod-dl-banner-animated.gif
-[brief]: PORTFOLIO-OVERVIEW.md
-[architecture]: ARCHITECTURE.md
-[operate]: OPERATOR-GUIDE.md
-[decisions]: PORTFOLIO-OVERVIEW.md#engineering-decisions
-[develop]: DEVELOPMENT.md
-[audit]: AUDIT-RAIL.md
-[custody]: CHAIN-OF-CUSTODY.md
-[specs]: SPECIFICATIONS.md
-[identity]: VISUAL-IDENTITY.md
-[motion]: assets/acquisition-motion.gif
-[motion-page]: assets/acquisition-motion-signal.html
-[motion-still]: assets/acquisition-motion.png
-[demo-pdf]: tod-dl-tech-specs.pdf
-[demo-html]: tod-dl-tech-specs.html
-[presentation]: tod-dl-web.html
+[native-evidence]:
+  ../specs/reports/native-acquisition-handover-2026-10-01.md

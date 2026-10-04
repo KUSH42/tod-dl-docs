@@ -2,8 +2,6 @@
 
 [Documentation](README.md) / Architecture
 
-![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
-
 TOD-DL separates acquisition authority, operator interaction, and independent
 verification. SQLite owns recovery state. Signed artifacts provide the
 exportable history. The console observes published state and requests
@@ -47,6 +45,9 @@ Start with the owning component when tracing a behavior.
 | --- | --- | --- |
 | CLI and lifecycle | [CLI][ref-1], [core][ref-2] | [Acquisition][reliable] |
 | Transfer | [Admit][ref-3], [native workers][ref-4] | [Cutover][cutover] |
+| Worker limits | [Worker policy][worker-policy] | [Limits][worker-limits] |
+| Parallel ranges | [Policy][range-src], [segment][seg-src] | [Ranges][ranges] |
+| Unsigned downloads | [Controller][download-ctl] | [Download][download] |
 | Prefix recovery | [Recovery][native-recovery] | [Resume][cutover] |
 | Receipt coverage | [Range ledger][native-ranges] | [Body integrity][body] |
 | Promotion | [State][ref-5], [storage][ref-6] | [Recovery][recovery] |
@@ -99,9 +100,21 @@ verification; the [source evidence and handover][native-evidence] record the
 scope.
 Interrupted source resume and complete native acceptance remain unverified.
 
+With `--parallel-ranges auto`, an eligible file uses bounded range requests
+into private segments below the state directory. The controller verifies and
+signs each segment, then assembles contiguous staging receipts. A connection
+budget bounds requests across all files, separate from the worker limit.
+[Parallel ranges][ranges] owns eligibility and recovery.
+
+`--run-mode download` starts a separate unsigned controller with its own
+state format. It shares route, storage, and final-protection checks but
+writes no signed provenance. The provenance verifier refuses unsigned state.
+[Non-forensic downloads][download] owns the boundary.
+
 Descriptor components use item identities and a separate streaming adapter.
-Do not infer public support from an adapter test. `run_locked()` in
-[`core.py`](../src/downloader/core.py) rejects format 2 descriptor acquisition.
+Do not infer public support from an adapter test.
+`check_descriptor_rollout()` in [`core.py`](../src/downloader/core.py)
+rejects format 2 descriptor acquisition before runtime writes.
 The [transport contract][transport] and [open work](../specs/OPEN-WORK.md)
 define the remaining integration work.
 
@@ -127,7 +140,13 @@ Use the [specification guide](SPECIFICATIONS.md) to trace an exact contract.
 [inventory]: ../specs/SPEC-inventory-snapshot-manifest.md
 [transport]: ../specs/SPEC-http-transport.md
 [evaluation]: ../specs/SPEC-acquisition-evaluation-infrastructure.md
-[banner]: assets/tod-dl-banner.gifw
+[worker-limits]: ../specs/SPEC-dynamic-worker-limits.md
+[ranges]: ../specs/SPEC-automatic-parallel-ranges.md
+[download]: ../specs/SPEC-non-forensic-downloads.md
+[worker-policy]: ../src/downloader/worker_policy.py
+[range-src]: ../src/downloader/range_policy.py
+[seg-src]: ../src/downloader/native_segments.py
+[download-ctl]: ../src/downloader/download_controller.py
 
 [ref-1]: ../src/tod_dl.py
 [ref-2]: ../src/downloader/core.py
@@ -149,4 +168,5 @@ Use the [specification guide](SPECIFICATIONS.md) to trace an exact contract.
 [ref-14]: ../src/evaluation/
 [ref-15]: OPERATOR-GUIDE.md#monitor-and-control-a-run
 
-[native-evidence]: ../specs/reports/native-acquisition-handover-2026-10-01.md
+[native-evidence]:
+  ../specs/reports/native-acquisition-handover-2026-10-01.md

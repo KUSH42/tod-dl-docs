@@ -2,8 +2,6 @@
 
 [Documentation](README.md) / Operate
 
-![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
-
 Use this guide to prepare, run, resume, verify, and export a bounded
 acquisition. Commands run from the repository root and use placeholder case
 paths. Use only material you are authorized to acquire and retain.
@@ -171,6 +169,69 @@ queue's selected items resolve to more than one route kind (for example, an
 to start until the operator passes `--allow-mixed-routes`, so a mixed selection
 is never a silent surprise.
 
+## Tune workers and parallel ranges
+
+`--workers` sets the startup worker limit. Add `--worker-mode auto` to let the
+controller adjust the limit within that ceiling from observed payload and
+congestion. Automatic mode does not guarantee higher throughput. The
+[worker-limit contract][worker-limits] owns the defaults and the policy.
+
+Add `--parallel-ranges auto` to split an eligible large file into bounded
+range requests. Eligibility requires a strong ETag. `--ranges-per-file` and
+`--connection-limit` bound requests per file and across the run. A limit of
+one keeps acquisition sequential. The [parallel-range
+contract][parallel-ranges] owns the size threshold, segment size, and
+defaults.
+
+```bash
+python3 src/tod_dl.py \
+    --queue /case/urls_priority.txt \
+    --destination /case/downloaded_files \
+    --state /case/runs/RUN_ID --run-id RUN_ID \
+    --case-id CASE_ID --artifact-root /case \
+    --provenance-signing-key /secure/run-signing-key.pem \
+    --context-declaration /secure/context-declaration.json \
+    --workers 4 --worker-mode auto \
+    --parallel-ranges auto --ranges-per-file 4 --connection-limit 8 \
+    --max-files 5
+```
+
+The example values are illustrative. Private segments stay below the state
+directory. A restart with ranges off keeps authenticated segments and fills
+earlier gaps before it continues sequentially. An earlier schema pin fails
+closed; do not edit a retained pin.
+
+## Download without signed provenance
+
+Use `--run-mode download` only when the case does not need custody evidence.
+Download mode writes no signed provenance. It rejects acquisition-only
+options, such as `--provenance-signing-key`, `--case-id`, and
+`--context-declaration`, and request descriptors before startup writes.
+`ACQUISITION_OPTIONS` in
+[`download_state.py`](../src/downloader/download_state.py) owns the list.
+
+```bash
+python3 src/tod_dl.py \
+    --run-mode download \
+    --queue /case/urls_priority.txt \
+    --destination /case/downloaded_files \
+    --state /case/unsigned-state \
+    --run-id unsigned-run --max-files 20
+```
+
+Startup, the console, the log, and the closing summary show
+`NON-FORENSIC / NO SIGNED PROVENANCE`. Local digests do not establish source
+authenticity or custody, and the provenance verifier refuses unsigned state.
+Every existing final stays protected, including files from signed runs.
+
+To split files that lack strong ETags, add both `--parallel-ranges auto` and
+`--ignore-etag`. The console then shows `ETAG CHECKS DISABLED`. Without a
+trusted expected checksum, segments from different file versions can combine
+undetected. Retries start from zero in a new unsigned generation. Resume with
+the same mode, override, run ID, queue, and `--max-files` value. A mode change
+needs new state and a new run ID. The
+[non-forensic contract][non-forensic] owns these rules.
+
 ## Diagnose native transport failures
 
 Read the fixed `diagnostic` code in the console or retained SQLite error.
@@ -290,7 +351,9 @@ A fresh run writes `resume-RUN_ID.sh` (mode `0700`) in the current directory,
 or in `--resume-script-dir` when you pass it. Run that script to resume the
 same run, with a console attached, as a single command. Pass
 `--no-resume-script` to skip writing it. `--resume-script-dir` must not lie
-under `--state` or `--destination`.
+under `--state` or `--destination`. The script records the startup worker
+and parallel-range settings explicitly. Live worker changes from the console
+do not change the script.
 
 ## Monitor and control a run
 
@@ -338,6 +401,13 @@ controller runs it.
 - Press `k` to checkpoint and stop the run. The controller checkpoints and
   terminates active transfers immediately, then the run exits. You cannot
   undo this action.
+
+On the Activity tab, select **Worker limit** or **Worker mode**. Each button
+opens its own input and confirmation. A manual limit change switches to
+fixed mode. Lowering the limit lets outstanding tasks finish; raising it
+admits work through the existing acquisition gates. The setting lasts for the
+current controller session. Read-only monitoring shows the setting and
+disables both buttons.
 
 The controller records every request it accepts, with its outcome and a
 durable state revision.
@@ -695,12 +765,16 @@ Response values outside the safe list are redacted. The
 Follow the [custody walkthrough](CHAIN-OF-CUSTODY.md) when reviewing a run.
 Use the [audit guide](AUDIT-RAIL.md) to interpret verification results.
 
-[banner]: assets/tod-dl-banner.gif
 [schemas]: ../src/provenance/schemas/registry.json
 [open-work]: ../specs/OPEN-WORK.md
 [case]: #prepare-the-case-and-context
 [transport]: ../specs/SPEC-http-transport.md
 [sealed]: ../specs/SPEC-sealed-multi-recipient.md
 
-[native-evidence]: ../specs/reports/native-acquisition-handover-2026-10-01.md
+[native-evidence]:
+  ../specs/reports/native-acquisition-handover-2026-10-01.md
+
 [native-contract]: ../specs/SPEC-native-transfer-engine.md
+[worker-limits]: ../specs/SPEC-dynamic-worker-limits.md
+[parallel-ranges]: ../specs/SPEC-automatic-parallel-ranges.md
+[non-forensic]: ../specs/SPEC-non-forensic-downloads.md
