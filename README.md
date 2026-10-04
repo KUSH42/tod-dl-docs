@@ -394,7 +394,7 @@ The [TOD-DL Non-Commercial License](LICENSE) permits personal, educational,
 and portfolio-review use. Commercial use and redistribution need prior
 written permission from the copyright holder.
 
-[banner]: docs/assets/tod-dl-banner-animated.gif
+[banner]: assets/tod-dl-banner-animated.gif
 [demo]: monitor-controller-demo.gif
 [brief]: docs/PORTFOLIO-OVERVIEW.md
 [docs]: docs/README.md
