@@ -408,11 +408,7 @@ and do not establish source authenticity or acquisition acceptance.
 
 ![Synthetic points form a file and linked provenance records.][motion]
 
-Open the [interactive acquisition illustration][motion-page] or the
-[static illustration][motion-still]. Download the interactive HTML and open
-it in a browser to use its controls.
-
-The specification demo contains **five specifications**, rather than the
+The public repository contains **five specifications**, rather than the
 complete private set. It presents the document design, linked contents,
 rendered diagrams, and PDF navigation.
 
