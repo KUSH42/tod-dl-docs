@@ -131,14 +131,18 @@ The [operator guide][operate] explains workflows for the separate downloader.
 The [development guide][develop] describes work in the private source
 repository. Commands and source paths in those guides require that checkout.
 
-The local artifact builder supports full and limited document builds. Run
-`node build-html-pdf.js --max-specs 5` to select up to five specifications in
-filename order. The builder defaults to `./build/` and writes
-`output_<design>.html` and `combined_output_<design>.pdf`. Its current design
-is `folio`, selected by `DESIGN` in `build-html-pdf.js`. A build requires the
-private specification inputs and the dependencies in `package.json`.
-Generated files in `build/` are ignored by Git. The published five-spec demo
-linked above is a separate artifact and uses the Signal design.
+The artifact builder in the private source repository supports full and
+limited document builds. From that checkout's root, run
+`node .github/scripts/build-html-pdf.js --max-specs 5` to select up to five
+specifications in filename order. Omit `--max-specs` to include the full set.
+The builder defaults to `specs/` and `build/artifacts/`, regardless of the
+working directory. It writes `output_<design>.html` and
+`combined_output_<design>.pdf`. Signal is the default design, selected by
+`DESIGN` in `.github/scripts/build-html-pdf.js`. Use `--design` to select
+another design. A build requires the private specification inputs and the
+dependencies in `.github/scripts/package.json`. Generated files in `build/`
+are ignored by Git. The published five-spec demo linked above is a separate
+artifact and uses the Signal design.
 
 Start with the [project brief][brief], then follow the guide for the
 engineering question you want to review.
