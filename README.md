@@ -401,10 +401,7 @@ The [TOD-DL Non-Commercial License](LICENSE) permits personal, educational,
 and portfolio-review use. Commercial use and redistribution need prior
 written permission from the copyright holder.
 
-## View the demonstrations
-
-The visual demonstrations use synthetic content. They illustrate the design
-and do not establish source authenticity or acquisition acceptance.
+## How to evaluate
 
 ![Synthetic points form a file and linked provenance records.][motion]
 
