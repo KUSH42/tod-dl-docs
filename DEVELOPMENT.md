@@ -2,8 +2,6 @@
 
 [Documentation](README.md) / Develop
 
-![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
-
 Start with the behavior contract and its owning component. The
 [architecture guide](ARCHITECTURE.md) maps responsibilities; the
 [specification guide](SPECIFICATIONS.md) groups the contracts by subject.
@@ -79,6 +77,17 @@ python3 -m unittest tests.test_native_recovery tests.test_native_cutover
 python3 -m unittest tests.test_archived_engine_retention
 ```
 
+For worker limits, parallel ranges, and unsigned download mode:
+
+```bash
+python3 -m unittest tests.test_dynamic_worker_limits
+python3 -m unittest tests.test_parallel_native tests.test_parallel_safety
+python3 -m unittest tests.test_parallel_range_policy
+python3 -m unittest tests.test_connection_budget
+python3 -m unittest tests.test_parallel_response_checks
+python3 -m unittest tests.test_non_forensic_downloads
+```
+
 Include schema, finalization, and session-order modules when the change crosses
 those boundaries. Passing focused tests does not establish the complete
 acceptance matrix in [native cutover][cutover].
@@ -104,6 +113,13 @@ Python and Bash syntax checks, and a secret scan. The suite command is:
 ```bash
 python3 -m unittest discover -s tests -p 'test_*.py' -v
 ```
+
+CI also measures Python line and branch coverage for the unittest process.
+Child processes are unmeasured. Download the `python-coverage` artifact from
+the workflow run and open `html/index.html` after extraction. A failed run
+still publishes partial coverage. The
+[coverage specification](../specs/SPEC-ci-python-coverage.md) owns the
+report contract.
 
 The repository reserves local full-suite runs for an explicit request.
 During development, use focused modules and leave full-suite validation to
@@ -172,9 +188,6 @@ source owner, and tests before proposing an implementation.
 [recovery-tests]: ../tests/test_native_recovery.py
 [cutover-tests]: ../tests/test_native_cutover.py
 [cutover]: ../specs/SPEC-native-engine-cutover.md
-[banner]: assets/tod-dl-banner-animated.gif
-[native-evidence]:  ../specs/reports/native-acquisition-handover-2026-10-01.md
-
 [ref-1]: ../src/downloader/core.py
 [ref-2]: ../tests/test_tod_dl.py
 [ref-3]: ../src/downloader/storage.py
@@ -192,3 +205,5 @@ source owner, and tests before proposing an implementation.
 [ref-15]: ../src/tod_dl.py
 [ref-16]: ../tests/test_control_launch_and_resume_script.py
 
+[native-evidence]:
+  ../specs/reports/native-acquisition-handover-2026-10-01.md

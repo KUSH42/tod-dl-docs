@@ -1,12 +1,10 @@
 # TOD-DL visual identity: Signal
 
-[Repository](../VISUAL-IDENTITY.md) / Visual Identity
-
-![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
-
 Signal defines the TOD-DL identity for websites, documentation, and readable
 HTML/PDF artifacts. Warm paper, dark type, a vermilion field, and the capture
 mark connect these formats. Use the same identity at each reading density.
+
+![TOD-DL Signal banner][banner]
 
 ## Scope and sources
 
@@ -225,4 +223,4 @@ Check the final rendered format before publishing it.
 6. Check that text separates byte integrity, record authentication, and source
    authenticity. Do not imply completed acceptance from a brand illustration.
 
-   [banner]: assets/tod-dl-banner-animated.gif
+[banner]: assets/tod-dl-banner.svg

@@ -2,8 +2,6 @@
 
 [Documentation](README.md) / Chain of custody
 
-![TOD-DL: resumable acquisition, durable state, verifiable custody][banner]
-
 This guide follows selected input through acquisition, recovery,
 verification, and handover. TOD-DL records the local acquisition segment.
 The operator remains responsible for source authorization, key custody,
@@ -182,7 +180,6 @@ Read the [audit rail](AUDIT-RAIL.md) for authentication and trust limits.
 
 [cutover]: ../specs/SPEC-native-engine-cutover.md
 [native-tests]: ../tests/test_native_recovery.py
-[banner]: assets/tod-dl-banner-animated.gif
 [custody]: ../specs/SPEC-run-custody.md
 [reliable]: ../specs/SPEC-reliable-acquisition.md
 [transport]: ../specs/SPEC-http-transport.md
